@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: Teams of HumanBeing Collection API
+  description: API для управления коллекцией героев и команд.
+  version: "1.0.0"
+servers:
+  - url: 'http://localhost:3244/api/heroes'
+
+paths:
+  /team/{team-id}/remove/{hero-id}:
+    delete:
+      summary: Удалить героя из указанной команды.
+      parameters:
+        - name: team-id
+          in: path
+          description: Уникальный идентификатор команды.
+          required: true
+          schema:
+            type: string
+        - name: hero-id
+          in: path
+          description: Уникальный идентификатор героя.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Герой успешно удалён из команды.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Герой 4 удалён из команды 2.
+                  time:
+                    type: string
+                    format: date-time
+        '400':
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Некорректный формат запроса.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Команда или герой не найдены.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Команда 3 не найдена.
+                  time:
+                    type: string
+                    format: date-time
+        '409':
+          description: Герой не является членом команды.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 409
+                  message:
+                    type: string
+                    example: Герой 4 не состоит в команде 2.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера
+                  time:
+                    type: string
+                    format: date-time
+
+  /team/{team-id}/car/add:
+    post:
+      summary: Пересадить всех героев команды без автомобиля на красные "Lada Kalina".
+      parameters:
+        - name: team-id
+          in: path
+          description: Уникальный идентификатор команды.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Все герои без автомобиля успешно пересажены на красные "Lada Kalina".
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: У героев команды 2, у которых не было машины, теперь есть красная Lada Kalina.
+                  time:
+                    type: string
+                    format: date-time
+        '400':
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Некорректный формат запроса.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Команда не найдена.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Команда 3 не найдена
+                  time:
+                    type: string
+                    format: date-time
+        '422':
+          description: Все члены команды уже имеют автомобиль.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 422
+                  message:
+                    type: string
+                    example: У всех членов команды 2 уже есть автомобиль.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time

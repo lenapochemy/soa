@@ -1,0 +1,769 @@
+openapi: 3.0.3
+info:
+  title: HumanBeing Collection API
+  description: API для управления коллекцией объектов HumanBeing.
+  version: "1.0.0"
+servers:
+  - url: 'http://localhost:3247/api'
+
+components:
+  schemas:
+    Coordinates:
+      type: object
+      required:
+        - x
+        - y
+      properties:
+        x:
+          type: integer
+          format: int64
+          description: Координата X 
+        y:
+          type: integer
+          minimum: -312
+          description: Координата Y 
+    Car:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Название автомобиля 
+        cool:
+          type: boolean
+          nullable: true
+          description: Автомобиль крутой? 
+    WeaponType:
+      type: string
+      enum:
+        - PISTOL
+        - SHOTGUN
+        - MACHINE_GUN
+        - BAT
+    Mood:
+      type: string
+      enum:
+        - SADNESS
+        - SORROW
+        - RAGE
+    HumanBeing:
+      type: object
+      required:
+        - name
+        - coordinates
+        - realHero
+        - hasToothpick
+        - impactSpeed
+        - mood
+        - car
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Имя человека
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        realHero:
+          type: boolean
+          description: Реальный герой?
+        hasToothpick:
+          type: boolean
+          description: Есть зубочистка?
+        impactSpeed:
+          type: number
+          format: float
+          maximum: 981
+          description: Скорость удара 
+        minutesOfWaiting:
+          type: number
+          format: double
+          nullable: true
+          description: Минуты ожидания
+        weaponType:
+          $ref: '#/components/schemas/WeaponType'
+          nullable: true
+        mood:
+          $ref: '#/components/schemas/Mood'
+        car:
+          $ref: '#/components/schemas/Car'
+
+    HumanBeingWithAllFields:
+      type: object
+      required:
+        - name
+        - coordinates
+        - creationDate
+        - realHero
+        - hasToothpick
+        - impactSpeed
+        - mood
+        - car
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          description: Автоматически генерируемый уникальный идентификатор 
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          description: Имя человека
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        creationDate:
+          type: string
+          format: date-time
+          description: Дата создания
+          readOnly: true
+        realHero:
+          type: boolean
+          description: Реальный герой?
+        hasToothpick:
+          type: boolean
+          description: Есть зубочистка?
+        impactSpeed:
+          type: number
+          format: float
+          maximum: 981
+          description: Скорость удара 
+        minutesOfWaiting:
+          type: number
+          format: double
+          nullable: true
+          description: Минуты ожидания
+        weaponType:
+          $ref: '#/components/schemas/WeaponType'
+          nullable: true
+        mood:
+          $ref: '#/components/schemas/Mood'
+        car:
+          $ref: '#/components/schemas/Car'
+
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Номер страницы (начинается с 1)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    pageSize:
+      name: page_size
+      in: query
+      description: Размер страницы
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 50
+        default: 10
+    sortBy:
+      name: sort_by
+      in: query
+      description: Поле для сортировки 
+      required: false
+      schema:
+        type: string
+        enum: 
+          - id
+          - name
+          - coordinates.X
+          - coordinates.y
+          - creationDate
+          - realHero
+          - hasToothpick
+          - impactSpeed
+          - minutesOfWaiting
+          - weaponType
+          - mood
+          - car
+    sortOrder:
+      name: sort_order
+      in: query
+      description: Порядок сортировки (asc - по возрастанию или desc - по убыванию)
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+    filter: 
+      name: filter
+      in: query
+      description: |
+        Строка для фильтрации и сортировки по полям в формате "поле оператор значение", разделенные запятыми, 
+        
+        где поля могут быть: id, name, X, y, creationDate, realHero, hasToothpick, impactSpeed, minutesOfWaiting, weaponType, mood, car
+        
+        и операторы: <, >, = 
+
+        пример: "x>13,mood=SADNESS"
+      required: false
+      schema:
+        type: string
+        example: x>13,mood=SADNESS
+
+paths:
+  /humans:
+    post:
+      summary: Добавление нового объекта HumanBeing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HumanBeing'
+      responses:
+        '201':
+          description: Обьект создан.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HumanBeingWithAllFields'
+        '400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Ресурс не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Ресурс не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
+        
+
+    get:
+      summary: Получение массива объектов с фильтрацией, сортировкой и пагинацией
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/sortBy'
+        - $ref: '#/components/parameters/sortOrder'
+      responses:
+        '200':
+          description: Массив объектов HumanBeing
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HumanBeingWithAllFields'
+        '400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Ресурс не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Ресурс не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
+
+  /humans/{id}:
+    get:
+      summary: Получение объекта HumanBeing по ID
+      parameters:
+        - name: id
+          in: path
+          description: Уникальный идентификатор объекта
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Объект найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HumanBeingWithAllFields'
+        400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Объект не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Объект 10 не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
+
+    put:
+      summary: Обновление объекта HumanBeing по ID.
+      parameters:
+        - name: id
+          in: path
+          description: Уникальный идентификатор объекта.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HumanBeing'
+      responses:
+        '200':
+          description: Объект обновлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HumanBeingWithAllFields'
+        '400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Объект не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Объект 3 не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
+    delete:
+      summary: Удаление объекта HumanBeing по ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Объект удален.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Объект 3 удален.
+                  time:
+                    type: string
+                    format: date-time
+        '400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Объект не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Объект 3 не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time.
+
+  /humans/creation-date:
+    get:
+      summary: Группировка объектов по дате их создания с подсчётом количества.
+      responses:
+        '200':
+          description: Группировка по дате создания.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creationDate:
+                      type: string
+                      format: date-time
+                    count:
+                      type: integer
+                      example: 1
+        '400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Ресурс не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Ресурс не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
+
+  /humans/minutes-of-waiting/{minutes}:
+    get:
+      summary: Получение объектов со временем ожидания больше заданного значения.
+      parameters:
+        - name: minutes
+          in: path
+          description: Минимальное значение minutesOfWaiting.
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        '200':
+          description: Объекты HumanBeing, значение minutesOfWaiting которых больше чем заданное
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HumanBeingWithAllFields'
+        '400':
+          description: Неправильный формат данных.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Неправильный формат данных.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Ресурс не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Ресурс не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '422':
+          description: Нет объектов с таким временем ожидания.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 422
+                  message:
+                    type: string
+                    example: У всех объектов время ожидания меньше.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
+
+  /humans/minutes-of-waiting/unique:
+    get:
+      summary: Получение уникальных значений времени ожидания.
+      responses:
+        '200':
+          description: Массив уникальных значений minutesOfWaiting.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: number
+                  format: double
+                  example: 1
+        '400':
+          description: Некорректный формат запроса.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: Некорректный формат запроса.
+                  time:
+                    type: string
+                    format: date-time
+        '404':
+          description: Ресурс не найден.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Ресурс не найден.
+                  time:
+                    type: string
+                    format: date-time
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Внутренняя ошибка сервера.
+                  time:
+                    type: string
+                    format: date-time
