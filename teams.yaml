@@ -10,6 +10,8 @@ paths:
   /team/{team-id}/remove/{hero-id}:
     delete:
       summary: Удалить героя из указанной команды.
+      tags:
+        - Teams
       parameters:
         - name: team-id
           in: path
@@ -109,6 +111,8 @@ paths:
   /team/{team-id}/car/add:
     post:
       summary: Пересадить всех героев команды без автомобиля на красные "Lada Kalina".
+      tags:
+        - Teams
       parameters:
         - name: team-id
           in: path

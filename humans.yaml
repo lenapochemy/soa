@@ -210,6 +210,8 @@ paths:
   /humans:
     post:
       summary: Добавление нового объекта HumanBeing.
+      tags:
+        - Humans
       requestBody:
         required: true
         content:
@@ -275,6 +277,8 @@ paths:
 
     get:
       summary: Получение массива объектов с фильтрацией, сортировкой и пагинацией
+      tags:
+        - Humans
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/pageSize'
@@ -342,6 +346,8 @@ paths:
   /humans/{id}:
     get:
       summary: Получение объекта HumanBeing по ID
+      tags:
+        - Humans
       parameters:
         - name: id
           in: path
@@ -357,7 +363,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HumanBeingWithAllFields'
-        400':
+        '400':
           description: Неправильный формат данных.
           content:
             application/json:
@@ -408,6 +414,8 @@ paths:
 
     put:
       summary: Обновление объекта HumanBeing по ID.
+      tags:
+        - Humans
       parameters:
         - name: id
           in: path
@@ -479,6 +487,8 @@ paths:
                     format: date-time
     delete:
       summary: Удаление объекта HumanBeing по ID.
+      tags:
+        - Humans
       parameters:
         - name: id
           in: path
@@ -555,6 +565,8 @@ paths:
   /humans/creation-date:
     get:
       summary: Группировка объектов по дате их создания с подсчётом количества.
+      tags:
+        - Humans
       responses:
         '200':
           description: Группировка по дате создания.
@@ -623,6 +635,8 @@ paths:
   /humans/minutes-of-waiting/{minutes}:
     get:
       summary: Получение объектов со временем ожидания больше заданного значения.
+      tags:
+        - Humans
       parameters:
         - name: minutes
           in: path
@@ -708,6 +722,8 @@ paths:
   /humans/minutes-of-waiting/unique:
     get:
       summary: Получение уникальных значений времени ожидания.
+      tags:
+        - Humans
       responses:
         '200':
           description: Массив уникальных значений minutesOfWaiting.
