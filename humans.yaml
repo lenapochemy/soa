@@ -88,9 +88,43 @@ components:
         car:
           $ref: '#/components/schemas/Car'
 
+    HumanBeingPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Имя человека
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        realHero:
+          type: boolean
+          description: Реальный герой?
+        hasToothpick:
+          type: boolean
+          description: Есть зубочистка?
+        impactSpeed:
+          type: number
+          format: float
+          maximum: 981
+          description: Скорость удара 
+        minutesOfWaiting:
+          type: number
+          format: double
+          nullable: true
+          description: Минуты ожидания
+        weaponType:
+          $ref: '#/components/schemas/WeaponType'
+          nullable: true
+        mood:
+          $ref: '#/components/schemas/Mood'
+        car:
+          $ref: '#/components/schemas/Car'
+
     HumanBeingWithAllFields:
       type: object
       required:
+        - id
         - name
         - coordinates
         - creationDate
@@ -257,22 +291,6 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time
         
 
     get:
@@ -323,22 +341,6 @@ paths:
                   message:
                     type: string
                     example: Ресурс не найден.
-                  time:
-                    type: string
-                    format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
                   time:
                     type: string
                     format: date-time
@@ -395,24 +397,7 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time
-
-    put:
+    patch:
       summary: Обновление объекта HumanBeing по ID.
       tags:
         - Humans
@@ -469,22 +454,7 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time
+
     delete:
       summary: Удаление объекта HumanBeing по ID.
       tags:
@@ -497,22 +467,8 @@ paths:
             type: integer
             minimum: 1
       responses:
-        '200':
-          description: Объект удален.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 200
-                  message:
-                    type: string
-                    example: Объект 3 удален.
-                  time:
-                    type: string
-                    format: date-time
+        '204':
+          description: Нет контента.
         '400':
           description: Неправильный формат данных.
           content:
@@ -545,22 +501,7 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time.
+
 
   /humans/creation-date:
     get:
@@ -615,22 +556,7 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time
+
 
   /humans/minutes-of-waiting/{minutes}:
     get:
@@ -702,22 +628,7 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time
+
 
   /humans/minutes-of-waiting/unique:
     get:
@@ -767,19 +678,4 @@ paths:
                   time:
                     type: string
                     format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
-                  time:
-                    type: string
-                    format: date-time
+

@@ -26,23 +26,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: Герой успешно удалён из команды.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    format: int32
-                    example: 200
-                  message:
-                    type: string
-                    example: Герой 4 удалён из команды 2.
-                  time:
-                    type: string
-                    format: date-time
+        '204':
+          description: нет контента.
         '400':
           description: Некорректный формат запроса.
           content:
@@ -60,7 +45,7 @@ paths:
                     type: string
                     format: date-time
         '404':
-          description: Команда или герой не найдены.
+          description: Команда не найдена.
           content:
             application/json:
               schema:
@@ -88,22 +73,6 @@ paths:
                   message:
                     type: string
                     example: Герой 4 не состоит в команде 2.
-                  time:
-                    type: string
-                    format: date-time
-        '500':
-          description: Внутренняя ошибка сервера
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера
                   time:
                     type: string
                     format: date-time
@@ -182,22 +151,6 @@ paths:
                   message:
                     type: string
                     example: У всех членов команды 2 уже есть автомобиль.
-                  time:
-                    type: string
-                    format: date-time
-        '500':
-          description: Внутренняя ошибка сервера.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 500
-                  message:
-                    type: string
-                    example: Внутренняя ошибка сервера.
                   time:
                     type: string
                     format: date-time
