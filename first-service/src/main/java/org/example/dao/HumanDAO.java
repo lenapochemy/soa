@@ -31,9 +31,18 @@ public class HumanDAO {
     @Transactional(value = Transactional.TxType.REQUIRED)
     public HumanBeing create(HumanBeingDTO humanBeingDTO) {
         Car car = humanBeingDTO.getCar();
+        car.setId(0);
         carDAO.create(car);
         Coordinates coordinates = humanBeingDTO.getCoordinates();
-        coordinatesDAO.create(coordinates);
+        Coordinates oldCoord = coordinatesDAO.find(coordinates.getId());
+        if (oldCoord == null) {
+            coordinatesDAO.create(coordinates);
+        } else {
+            coordinates.setId(0);
+            if (!oldCoord.getX().equals(coordinates.getX()) || !oldCoord.getY().equals(coordinates.getY())) {
+                coordinatesDAO.create(coordinates);
+            }
+        }
         HumanBeing human = mapper.humanFromDTO(humanBeingDTO);
         em.persist(human);
         return human;

@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.example.model.Coordinates;
 
-import java.util.List;
 
 @ApplicationScoped
 public class CoordinatesDAO {
@@ -18,6 +17,10 @@ public class CoordinatesDAO {
     public Coordinates create(Coordinates coordinates) {
         em.persist(coordinates);
         return coordinates;
+    }
+
+    public Coordinates find(int id) {
+        return em.find(Coordinates.class, id);
     }
 
     @Transactional
