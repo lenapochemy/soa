@@ -1,22 +1,17 @@
 package org.example;
 
 import jakarta.inject.Inject;
-import jakarta.json.bind.JsonbException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import lombok.Getter;
 import org.example.dao.HumanDAO;
 import org.example.dto.CreationDateCount;
 import org.example.dto.HumanBeingDTO;
-import org.example.model.Car;
+import org.example.exception.BadRequestException;
 import org.example.model.HumanBeing;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Path("/humans")
@@ -50,7 +45,8 @@ public class HumanResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createHuman(HumanBeingDTO humanDTO) {
-        if(humanDTO.getCar() == null || humanDTO.getCoordinates() == null){
+//        System.out.println("\u001B[35m" + humanDTO + "\u001B[0m");
+        if (humanDTO.getCar() == null || humanDTO.getCoordinates() == null) {
             HumanResponse response = new HumanResponse(400, "Неправильный формат данных");
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         }
@@ -59,12 +55,12 @@ public class HumanResource {
             HumanBeing savedHuman = humanDAO.create(humanDTO);
             if (savedHuman != null) {
                 return Response.status(Response.Status.CREATED).entity(savedHuman).build();
-            } else{
+            } else {
                 HumanResponse response = new HumanResponse(404, "Ресурс не найден");
                 return Response.status(Response.Status.NOT_FOUND).entity(response).build();
             }
 
-        } catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             HumanResponse response = new HumanResponse(400, "Неправильный формат данных");
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         }
@@ -73,8 +69,8 @@ public class HumanResource {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteHuman(@PathParam("id") Integer id){
-        if(humanDAO.delete(id)){
+    public Response deleteHuman(@PathParam("id") Integer id) {
+        if (humanDAO.delete(id)) {
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
             HumanResponse response = new HumanResponse(404, "Ресурс не найден");
@@ -86,7 +82,7 @@ public class HumanResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateHuman(HumanBeingDTO humanDTO, @PathParam("id") Integer id){
+    public Response updateHuman(HumanBeingDTO humanDTO, @PathParam("id") Integer id) {
         try {
             HumanBeing oldHuman = humanDAO.find(id);
             if (oldHuman == null) {
@@ -96,7 +92,7 @@ public class HumanResource {
                 HumanBeing humanBeing = humanDAO.update(oldHuman, humanDTO);
                 return Response.ok(humanBeing).build();
             }
-        } catch (ConstraintViolationException e){ //TODO
+        } catch (ConstraintViolationException e) { //TODO
             HumanResponse response = new HumanResponse(400, "Неправильный формат данных");
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         }
@@ -106,9 +102,9 @@ public class HumanResource {
     @GET
     @Path("/minutes-of-waiting/{minutes}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getWithGreaterMinutesOfWaiting(@PathParam("minutes") int minutes){
+    public Response getWithGreaterMinutesOfWaiting(@PathParam("minutes") int minutes) {
         List<HumanBeing> humanBeingList = humanDAO.findWithGreaterMinutesOfWaiting(minutes);
-        if(humanBeingList.isEmpty()){
+        if (humanBeingList.isEmpty()) {
             HumanResponse response = new HumanResponse(422, "У всех объектов время ожидания меньше");
             return Response.status(422).entity(response).build();
         } else {
@@ -120,7 +116,7 @@ public class HumanResource {
     @GET
     @Path("/minutes-of-waiting/unique")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUniqueMinutesOfWaiting(){
+    public Response getUniqueMinutesOfWaiting() {
         Set<Double> uniqueMinutes = humanDAO.findUniqueMinutesOfWaiting();
         return Response.ok(uniqueMinutes).build();
     }
@@ -129,10 +125,30 @@ public class HumanResource {
     @GET
     @Path("/creation-date")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response groupingByCreationDate(){
+    public Response groupingByCreationDate() {
         List<CreationDateCount> creationDate = humanDAO.groupingByCreationDate();
         return Response.ok(creationDate).build();
     }
 
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAll(@QueryParam("page") Integer pageNumber,
+                           @QueryParam("page-size") Integer pageSize,
+                           @QueryParam("filter") String filter,
+                           @QueryParam("sort-by") String sortBy,
+                           @QueryParam("sort-order") String sortOrder
+    ) {
+        try {
+            List<HumanBeing> humans = humanDAO.findAllFilterSortPaging(pageNumber, pageSize, filter, sortBy, sortOrder);
+            if (humans.isEmpty()) {
+                HumanResponse response = new HumanResponse(422, "Нет обьектов, удовлетворящию условиям");
+                return Response.status(422).entity(response).build();
+            }
+            return Response.ok(humans).build();
+        } catch (BadRequestException e) {
+            HumanResponse response = new HumanResponse(400, "Неправильный формат данных: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
+        }
+    }
 }
