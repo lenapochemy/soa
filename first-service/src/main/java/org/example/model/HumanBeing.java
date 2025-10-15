@@ -2,6 +2,7 @@ package org.example.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -31,6 +32,7 @@ public class HumanBeing {
     @NotNull
     private LocalDate creationDate;
     private Boolean realHero;
+    private Integer teamNumber;
     private Boolean hasToothpick;
     @Max(value = 981)
     private Float impactSpeed;

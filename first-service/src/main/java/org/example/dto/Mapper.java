@@ -21,6 +21,7 @@ public class Mapper {
         humanBeing.setWeaponType(dto.getWeaponType());
         humanBeing.setMood(dto.getMood());
         humanBeing.setCar(dto.getCar());
+        humanBeing.setTeamNumber(dto.getTeamNumber());
 
         return humanBeing;
     }

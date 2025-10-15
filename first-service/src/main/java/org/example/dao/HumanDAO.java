@@ -239,7 +239,7 @@ public class HumanDAO {
     }
 
     private final List<String> fields = Arrays.asList("id", "name", "coordinates.id", "coordinates.x", "coordinates.y",
-            "creationDate", "realHero", "hasToothpick", "impactSpeed", "minutesOfWaiting", "weaponType", "mood",
+            "creationDate", "realHero", "teamNumber", "hasToothpick", "impactSpeed", "minutesOfWaiting", "weaponType", "mood",
             "car.id", "car.name", "car.cool");
 
     private boolean isField(String field) {
@@ -256,7 +256,7 @@ public class HumanDAO {
                 case "mood" -> Mood.valueOf(value);
                 case "weaponType" -> WeaponType.valueOf(value);
                 case "realHero", "hasToothpick", "car.cool" -> value;
-                case "id", "coordinates.id", "coordinates.y", "car.id" -> Integer.parseInt(value);
+                case "id", "coordinates.id", "coordinates.y", "car.id", "teamNumber" -> Integer.parseInt(value);
                 case "creationDate" -> "'" + LocalDate.parse(value) + "'";
                 case "name", "car.name" -> "'" + value + "'";
                 case "coordinates.x" -> Long.parseLong(value);

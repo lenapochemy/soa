@@ -67,6 +67,11 @@ components:
         realHero:
           type: boolean
           description: Реальный герой?
+        teamNumber:
+          type: number
+          format: int
+          minimum: 1
+          description: Номер команды
         hasToothpick:
           type: boolean
           description: Есть зубочистка?
@@ -100,6 +105,11 @@ components:
         realHero:
           type: boolean
           description: Реальный герой?
+        teamNumber:
+          type: number
+          format: int
+          minimum: 1
+          description: Номер команды
         hasToothpick:
           type: boolean
           description: Есть зубочистка?
@@ -153,6 +163,11 @@ components:
         realHero:
           type: boolean
           description: Реальный герой?
+        teamNumber:
+          type: number
+          format: int
+          minimum: 1
+          description: Номер команды
         hasToothpick:
           type: boolean
           description: Есть зубочистка?
@@ -185,7 +200,7 @@ components:
         minimum: 1
         default: 1
     pageSize:
-      name: page_size
+      name: page-size
       in: query
       description: Размер страницы
       required: false
@@ -195,7 +210,7 @@ components:
         maximum: 50
         default: 10
     sortBy:
-      name: sort_by
+      name: sort-by
       in: query
       description: Поле для сортировки 
       required: false
@@ -204,18 +219,22 @@ components:
         enum: 
           - id
           - name
+          - coordinates.id
           - coordinates.X
           - coordinates.y
           - creationDate
           - realHero
+          - teamNumber
           - hasToothpick
           - impactSpeed
           - minutesOfWaiting
           - weaponType
           - mood
-          - car
+          - car.id
+          - car.name
+          - car.cool
     sortOrder:
-      name: sort_order
+      name: sort-order
       in: query
       description: Порядок сортировки (asc - по возрастанию или desc - по убыванию)
       required: false
@@ -230,7 +249,7 @@ components:
       description: |
         Строка для фильтрации и сортировки по полям в формате "поле оператор значение", разделенные запятыми, 
         
-        где поля могут быть: id, name, X, y, creationDate, realHero, hasToothpick, impactSpeed, minutesOfWaiting, weaponType, mood, car
+        где поля могут быть: id, name, coordinates.id, coordinates.x, coordinates.y, creationDate, realHero, teamNumber, hasToothpick, impactSpeed, minutesOfWaiting, weaponType, mood, car.id, car.name, car.cool
         
         и операторы: <, >, = 
 

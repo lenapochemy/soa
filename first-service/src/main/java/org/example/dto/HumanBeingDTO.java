@@ -23,5 +23,6 @@ public class HumanBeingDTO {
     private WeaponType weaponType;
     private Mood mood;
     private Car car;
+    private Integer teamNumber;
 
 }
