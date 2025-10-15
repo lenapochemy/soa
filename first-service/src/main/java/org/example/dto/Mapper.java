@@ -2,19 +2,18 @@ package org.example.dto;
 
 import org.example.model.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Mapper {
 
-    public Mapper(){}
-
-
+    public Mapper() {
+    }
 
     public HumanBeing humanFromDTO(HumanBeingDTO dto) {
         HumanBeing humanBeing = new HumanBeing();
         humanBeing.setName(dto.getName());
         humanBeing.setCoordinates(dto.getCoordinates());
-        humanBeing.setCreationDate(LocalDateTime.now());
+        humanBeing.setCreationDate(LocalDate.now());
         humanBeing.setRealHero(dto.getRealHero());
         humanBeing.setHasToothpick(dto.getHasToothpick());
         humanBeing.setImpactSpeed(dto.getImpactSpeed());

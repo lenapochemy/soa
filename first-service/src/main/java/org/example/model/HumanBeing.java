@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,30 +26,22 @@ public class HumanBeing {
     @NotEmpty
     private String name;
     @NotNull
-//    @Embedded
     @OneToOne
     private Coordinates coordinates;
     @NotNull
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
     private Boolean realHero;
     private Boolean hasToothpick;
     @Max(value = 981)
     private Float impactSpeed;
     private Double minutesOfWaiting;
+    @Enumerated
     private WeaponType weaponType;
     @NotNull
+    @Enumerated
     private Mood mood;
     @NotNull
-//    @Embedded
     @OneToOne
     private Car car;
-
-    @Override
-    public String toString(){
-        return "Human: id = " + id + ", creationDate = " + creationDate +  "name = " + this.name + ", coordinates: id = " + coordinates.getId() + ", x = " + coordinates.getX() +
-                ", y = " + this.coordinates.getY() + ", realHero = " + realHero + ", hasToothPick = " + hasToothpick +
-                ", impactSpeed = " + impactSpeed + ", minutesOfWaiting = " + minutesOfWaiting + ", weaponType = " +
-                weaponType + ", mood = " + mood + ", car: id = " + car.getId() + ", name = " + car.getName() + ", cool = " + car.getCool();
-    }
 
 }

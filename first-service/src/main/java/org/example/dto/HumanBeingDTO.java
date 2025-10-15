@@ -24,5 +24,4 @@ public class HumanBeingDTO {
     private Mood mood;
     private Car car;
 
-
 }

@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Embeddable
 @XmlRootElement
 @Entity
 public class Car {
@@ -24,12 +23,4 @@ public class Car {
     private String name;
     private Boolean cool;
 
-//    @OneToOne
-//    private HumanBeing humanBeing;
-
-
-    @Override
-    public String toString(){
-        return "Car: id = " + id + ", name = " + name + ", cool = " + cool;
-    }
 }

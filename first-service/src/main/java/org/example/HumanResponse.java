@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @XmlRootElement
 @Setter
 @Getter
@@ -14,12 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class HumanResponse {
 
-
     private int code;
     private String message;
     private LocalDateTime time;
 
-    public HumanResponse(int code, String message){
+    public HumanResponse(int code, String message) {
         this.time = LocalDateTime.now();
         this.code = code;
         this.message = message;

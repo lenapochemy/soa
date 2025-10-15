@@ -23,23 +23,8 @@ public class CarDAO {
         return car;
     }
 
-    public Car find(int id) {
-        return em.find(Car.class, id);
-    }
-
     @Transactional
     public Car update(Car car) throws ConstraintViolationException {
         return em.merge(car);
-    }
-
-    public void delete(int id) {
-        Car car = em.find(Car.class, id);
-        if (car != null) {
-            em.remove(car);
-        }
-    }
-
-    public List<Car> findAll() {
-        return em.createQuery("SELECT h FROM Car h", Car.class).getResultList();
     }
 }
