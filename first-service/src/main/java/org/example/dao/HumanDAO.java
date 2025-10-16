@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.example.dto.CreationDateCount;
 import org.example.dto.HumanBeingDTO;
+import org.example.dto.HumanBeingPatch;
 import org.example.dto.Mapper;
 import org.example.exception.BadRequestException;
 import org.example.model.*;
@@ -57,62 +58,64 @@ public class HumanDAO {
     }
 
     @Transactional
-    public HumanBeing update(HumanBeing oldHuman, HumanBeingDTO dto) {
-        if (dto.getName() != null) {
-            oldHuman.setName(dto.getName());
+    public HumanBeing update(HumanBeing oldHuman, HumanBeingPatch dto) {
+        if (dto.getName().isPresent()) {
+            oldHuman.setName(dto.getName().orElse(null));
         }
-        if (dto.getRealHero() != null) {
-            oldHuman.setRealHero(dto.getRealHero());
+        if (dto.getRealHero().isPresent()) {
+            oldHuman.setRealHero(dto.getRealHero().orElse(null));
         }
-        if (dto.getHasToothpick() != null) {
-            oldHuman.setHasToothpick(dto.getHasToothpick());
+        if (dto.getHasToothpick().isPresent()) {
+            oldHuman.setHasToothpick(dto.getHasToothpick().orElse(null));
         }
-        if (dto.getImpactSpeed() != null) {
-            oldHuman.setImpactSpeed(dto.getImpactSpeed());
+        if (dto.getImpactSpeed().isPresent()) {
+            oldHuman.setImpactSpeed(dto.getImpactSpeed().orElse(null));
         }
-        if (dto.getMinutesOfWaiting() != null) {
-            oldHuman.setMinutesOfWaiting(dto.getMinutesOfWaiting());
+        if (dto.getMinutesOfWaiting().isPresent()) {
+            oldHuman.setMinutesOfWaiting(dto.getMinutesOfWaiting().orElse(null));
         }
-        if (dto.getWeaponType() != null) {
-            oldHuman.setWeaponType(dto.getWeaponType());
+        if (dto.getWeaponType().isPresent()) {
+            oldHuman.setWeaponType(dto.getWeaponType().orElse(null));
         }
-        if (dto.getMood() != null) {
-            oldHuman.setMood(dto.getMood());
+        if (dto.getMood().isPresent()) {
+            oldHuman.setMood(dto.getMood().orElse(null));
         }
-        if (dto.getTeamNumber() != null) {
-            oldHuman.setTeamNumber(dto.getTeamNumber());
-        }
-
-        Car car = dto.getCar();
-        if (car != null) {
-            Car oldCar = oldHuman.getCar();
-            if (oldCar != null) {
-                if (car.getName() != null) {
-                    oldCar.setName(car.getName());
-                }
-                if (car.getCool() != null) {
-                    oldCar.setCool(car.getCool());
-                }
-                carDAO.update(oldCar);
-            } else {
-                Car newCar = carDAO.create(car);
-                oldHuman.setCar(newCar);
-            }
-        }
-        Coordinates coordinates = dto.getCoordinates();
-        if (coordinates != null) {
-            Coordinates oldCoordinates = oldHuman.getCoordinates();
-            if (coordinates.getX() != null) {
-                oldCoordinates.setX(coordinates.getX());
-            }
-            if (coordinates.getY() != null) {
-                oldCoordinates.setY(coordinates.getY());
-            }
-            coordinatesDAO.update(oldCoordinates);
+        if (dto.getTeamNumber().isPresent()) {
+            oldHuman.setTeamNumber(dto.getTeamNumber().orElse(null));
         }
 
+        if (dto.getCar().isPresent()) {
+            Car car = dto.getCar().orElse(null);
+            if (car != null) {
+                Car oldCar = oldHuman.getCar();
+                if (oldCar != null) {
+                    if (car.getName() != null) {
+                        oldCar.setName(car.getName());
+                    }
+                    if (car.getCool() != null) {
+                        oldCar.setCool(car.getCool());
+                    }
+                    carDAO.update(oldCar);
+                } else {
+                    Car newCar = carDAO.create(car);
+                    oldHuman.setCar(newCar);
+                }
+            }
+        }
+        if (dto.getCoordinates().isPresent()) {
+            Coordinates coordinates = dto.getCoordinates().orElse(null);
+            if (coordinates != null) {
+                Coordinates oldCoordinates = oldHuman.getCoordinates();
+                if (coordinates.getX() != null) {
+                    oldCoordinates.setX(coordinates.getX());
+                }
+                if (coordinates.getY() != null) {
+                    oldCoordinates.setY(coordinates.getY());
+                }
+                coordinatesDAO.update(oldCoordinates);
+            }
+        }
         return em.merge(oldHuman);
-
     }
 
     @Transactional

@@ -114,7 +114,7 @@ public class ClientService {
         if (humanBeing.getTeamNumber() != teamId) {
             throw new TeamException();
         }
-        humanBeing.setTeamNumber(0);
+        humanBeing.setTeamNumber(null);
         ResponseEntity<HumanBeing> res = restClient.patch()
                 .uri(baseHumansUrl + "/" + humanId)
                 .body(humanBeing)

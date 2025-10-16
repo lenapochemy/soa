@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 import org.example.dao.HumanDAO;
 import org.example.dto.CreationDateCount;
 import org.example.dto.HumanBeingDTO;
+import org.example.dto.HumanBeingPatch;
 import org.example.exception.BadRequestException;
 import org.example.model.HumanBeing;
 
@@ -76,14 +77,14 @@ public class HumanResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateHuman(HumanBeingDTO humanDTO, @PathParam("id") Integer id) {
+    public Response updateHuman(HumanBeingPatch humanBeingPatch, @PathParam("id") Integer id) {
         try {
             HumanBeing oldHuman = humanDAO.find(id);
             if (oldHuman == null) {
                 HumanResponse response = new HumanResponse(404, "Обьект " + id + " не найден.");
                 return Response.status(Response.Status.NOT_FOUND).entity(response).build();
             } else {
-                HumanBeing humanBeing = humanDAO.update(oldHuman, humanDTO);
+                HumanBeing humanBeing = humanDAO.update(oldHuman, humanBeingPatch);
                 return Response.ok(humanBeing).build();
             }
         } catch (ConstraintViolationException e) { //TODO
