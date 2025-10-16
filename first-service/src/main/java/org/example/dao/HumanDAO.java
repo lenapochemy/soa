@@ -221,20 +221,27 @@ public class HumanDAO {
                 throw new BadRequestException("Тип сортировки должен быть asc или desc");
         } else sortOrder = "asc";
         query.append(" ").append(sortOrder.toUpperCase());
-        if (pageSize != null) {
-            if (pageSize < 1) throw new BadRequestException("Размер страницы должен быть положительным");
-        } else pageSize = 10;
 
         List<HumanBeing> humans;
-        System.out.println("\u001B[35m" + query + "\u001B[0m");
-        if (pageNumber != null) {
+        if (pageNumber == null && pageSize == null) {
+            humans = em.createQuery(query.toString(), HumanBeing.class)
+                    .getResultList();
+        } else if (pageNumber != null && pageSize != null) {
+            if (pageSize < 1) throw new BadRequestException("Размер страницы должен быть положительным");
             if (pageNumber < 1) throw new BadRequestException("Номер страницы должен быть положительным");
             humans = em.createQuery(query.toString(), HumanBeing.class)
                     .setFirstResult(pageSize * (pageNumber - 1))
                     .setMaxResults(pageSize)
                     .getResultList();
-        } else {
+        } else if (pageNumber == null) {
+            if (pageSize < 1) throw new BadRequestException("Размер страницы должен быть положительным");
             humans = em.createQuery(query.toString(), HumanBeing.class)
+                    .setMaxResults(pageSize)
+                    .getResultList();
+        } else {
+            pageSize = 10;
+            humans = em.createQuery(query.toString(), HumanBeing.class)
+                    .setFirstResult(pageSize * (pageNumber - 1))
                     .setMaxResults(pageSize)
                     .getResultList();
         }
