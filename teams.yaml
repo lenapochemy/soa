@@ -4,7 +4,7 @@ info:
   description: API для управления коллекцией героев и команд.
   version: "1.0.0"
 servers:
-  - url: 'http://localhost:3244/api/heroes'
+  - url: 'http://localhost:1214/team-service/heroes'
 
 paths:
   /team/{team-id}/remove/{hero-id}:
@@ -27,7 +27,7 @@ paths:
             type: string
       responses:
         '204':
-          description: нет контента.
+          description: Нет контента.
         '400':
           description: Некорректный формат запроса.
           content:
@@ -45,7 +45,7 @@ paths:
                     type: string
                     format: date-time
         '404':
-          description: Команда не найдена.
+          description: Герой не найден.
           content:
             application/json:
               schema:
@@ -56,7 +56,7 @@ paths:
                     example: 404
                   message:
                     type: string
-                    example: Команда 3 не найдена.
+                    example: Герой 3 не найден.
                   time:
                     type: string
                     format: date-time
