@@ -31,16 +31,20 @@ public class HumanDAO {
     @Transactional(value = Transactional.TxType.REQUIRED)
     public HumanBeing create(HumanBeingDTO humanBeingDTO) {
         Car car = humanBeingDTO.getCar();
-        car.setId(0);
-        carDAO.create(car);
+        if (car != null) {
+            car.setId(0);
+            carDAO.create(car);
+        }
         Coordinates coordinates = humanBeingDTO.getCoordinates();
-        Coordinates oldCoord = coordinatesDAO.find(coordinates.getId());
-        if (oldCoord == null) {
-            coordinatesDAO.create(coordinates);
-        } else {
-            coordinates.setId(0);
-            if (!oldCoord.getX().equals(coordinates.getX()) || !oldCoord.getY().equals(coordinates.getY())) {
+        if (coordinates != null) {
+            Coordinates oldCoord = coordinatesDAO.find(coordinates.getId());
+            if (oldCoord == null) {
                 coordinatesDAO.create(coordinates);
+            } else {
+                coordinates.setId(0);
+                if (!oldCoord.getX().equals(coordinates.getX()) || !oldCoord.getY().equals(coordinates.getY())) {
+                    coordinatesDAO.create(coordinates);
+                }
             }
         }
         HumanBeing human = mapper.humanFromDTO(humanBeingDTO);
@@ -75,17 +79,25 @@ public class HumanDAO {
         if (dto.getMood() != null) {
             oldHuman.setMood(dto.getMood());
         }
+        if (dto.getTeamNumber() != null) {
+            oldHuman.setTeamNumber(dto.getTeamNumber());
+        }
 
         Car car = dto.getCar();
         if (car != null) {
             Car oldCar = oldHuman.getCar();
-            if (car.getName() != null) {
-                oldCar.setName(car.getName());
+            if (oldCar != null) {
+                if (car.getName() != null) {
+                    oldCar.setName(car.getName());
+                }
+                if (car.getCool() != null) {
+                    oldCar.setCool(car.getCool());
+                }
+                carDAO.update(oldCar);
+            } else {
+                Car newCar = carDAO.create(car);
+                oldHuman.setCar(newCar);
             }
-            if (car.getCool() != null) {
-                oldCar.setCool(car.getCool());
-            }
-            carDAO.update(oldCar);
         }
         Coordinates coordinates = dto.getCoordinates();
         if (coordinates != null) {
@@ -99,8 +111,6 @@ public class HumanDAO {
             coordinatesDAO.update(oldCoordinates);
         }
 
-//        HumanBeing human = mapper.humanFromDTO(dto);
-//        human.setId(id);
         return em.merge(oldHuman);
 
     }
@@ -154,7 +164,7 @@ public class HumanDAO {
                 String[] cond; // {"name", "lena"}
                 if (condition.contains("=")) {
                     cond = condition.split("=");
-                    System.out.println(Arrays.toString(cond));
+//                    System.out.println(Arrays.toString(cond));
                     if (cond.length != 2) {
                         throw new BadRequestException("Фильтр должен быть в формате \"поле оператор значение\"");
                     }
@@ -166,7 +176,7 @@ public class HumanDAO {
                         } else {
                             query.append(" AND").append(queryPart);
                         }
-                        System.out.println("\u001B[35m" + query + "\u001B[0m");
+//                        System.out.println("\u001B[35m" + query + "\u001B[0m");
                     } else throw new BadRequestException("Поле " + cond[0] + " не существует");
                 } else if (condition.contains(">")) {
                     cond = condition.split(">");
@@ -181,7 +191,7 @@ public class HumanDAO {
                         } else {
                             query.append(" AND").append(queryPart);
                         }
-                        System.out.println("\u001B[35m" + query + "\u001B[0m");
+//                        System.out.println("\u001B[35m" + query + "\u001B[0m");
                     } else throw new BadRequestException("Поле " + cond[0] + " не существует");
                 } else if (condition.contains("<")) {
                     cond = condition.split("<");
@@ -196,7 +206,7 @@ public class HumanDAO {
                         } else {
                             query.append(" AND").append(queryPart);
                         }
-                        System.out.println("\u001B[35m" + query + "\u001B[0m");
+//                        System.out.println("\u001B[35m" + query + "\u001B[0m");
                     } else throw new BadRequestException("Поле " + cond[0] + " не существует");
                 } else throw new BadRequestException("Фильтр должен быть в формате \"поле оператор значение\"");
             }

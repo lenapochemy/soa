@@ -45,12 +45,6 @@ public class HumanResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createHuman(HumanBeingDTO humanDTO) {
-//        System.out.println("\u001B[35m" + humanDTO + "\u001B[0m");
-        if (humanDTO.getCar() == null || humanDTO.getCoordinates() == null) {
-            HumanResponse response = new HumanResponse(400, "Неправильный формат данных");
-            return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
-        }
-
         try {
             HumanBeing savedHuman = humanDAO.create(humanDTO);
             if (savedHuman != null) {

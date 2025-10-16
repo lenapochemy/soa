@@ -42,8 +42,7 @@ public class HumanBeing {
     @NotNull
     @Enumerated
     private Mood mood;
-    @NotNull
-    @OneToOne
+    @OneToOne (optional = true)
     private Car car;
 
 }
