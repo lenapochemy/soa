@@ -87,8 +87,8 @@ public class HumanResource {
                 HumanBeing humanBeing = humanDAO.update(oldHuman, humanBeingPatch);
                 return Response.ok(humanBeing).build();
             }
-        } catch (ConstraintViolationException e) { //TODO
-            HumanResponse response = new HumanResponse(400, "Неправильный формат данных");
+        } catch (BadRequestException e) {
+            HumanResponse response = new HumanResponse(400, "Неправильный формат данных: " + e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
         }
     }

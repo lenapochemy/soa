@@ -5,10 +5,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.example.dto.CreationDateCount;
-import org.example.dto.HumanBeingDTO;
-import org.example.dto.HumanBeingPatch;
-import org.example.dto.Mapper;
+import jakarta.validation.ConstraintViolationException;
+import org.example.dto.*;
 import org.example.exception.BadRequestException;
 import org.example.model.*;
 
@@ -27,7 +25,7 @@ public class HumanDAO {
     @Inject
     CoordinatesDAO coordinatesDAO;
 
-    private Mapper mapper = new Mapper();
+    private final Mapper mapper = new Mapper();
 
     @Transactional(value = Transactional.TxType.REQUIRED)
     public HumanBeing create(HumanBeingDTO humanBeingDTO) {
@@ -58,9 +56,13 @@ public class HumanDAO {
     }
 
     @Transactional
-    public HumanBeing update(HumanBeing oldHuman, HumanBeingPatch dto) {
+    public HumanBeing update(HumanBeing oldHuman, HumanBeingPatch dto) throws BadRequestException {
         if (dto.getName().isPresent()) {
-            oldHuman.setName(dto.getName().orElse(null));
+            String name = dto.getName().orElse(null);
+            if (name == null || name.isEmpty()) {
+                throw new BadRequestException("Неправильное значение name");
+            }
+            oldHuman.setName(name);
         }
         if (dto.getRealHero().isPresent()) {
             oldHuman.setRealHero(dto.getRealHero().orElse(null));
@@ -69,7 +71,11 @@ public class HumanDAO {
             oldHuman.setHasToothpick(dto.getHasToothpick().orElse(null));
         }
         if (dto.getImpactSpeed().isPresent()) {
-            oldHuman.setImpactSpeed(dto.getImpactSpeed().orElse(null));
+            Float impactSpeed = dto.getImpactSpeed().orElse(null);
+            if (impactSpeed != null) {
+                if (impactSpeed > 981) throw new BadRequestException("Неправильное значение impactSpeed");
+            }
+            oldHuman.setImpactSpeed(impactSpeed);
         }
         if (dto.getMinutesOfWaiting().isPresent()) {
             oldHuman.setMinutesOfWaiting(dto.getMinutesOfWaiting().orElse(null));
@@ -78,44 +84,68 @@ public class HumanDAO {
             oldHuman.setWeaponType(dto.getWeaponType().orElse(null));
         }
         if (dto.getMood().isPresent()) {
-            oldHuman.setMood(dto.getMood().orElse(null));
+            Mood mood = dto.getMood().orElse(null);
+            if (mood == null) throw new BadRequestException("Неправильное значение mood");
         }
         if (dto.getTeamNumber().isPresent()) {
             oldHuman.setTeamNumber(dto.getTeamNumber().orElse(null));
         }
 
         if (dto.getCar().isPresent()) {
-            Car car = dto.getCar().orElse(null);
-            if (car != null) {
+            CarPatch carPatch = dto.getCar().orElse(null);
+            if (carPatch != null) {
                 Car oldCar = oldHuman.getCar();
                 if (oldCar != null) {
-                    if (car.getName() != null) {
-                        oldCar.setName(car.getName());
-                    }
-                    if (car.getCool() != null) {
-                        oldCar.setCool(car.getCool());
-                    }
+                    carFromPatch(carPatch, oldCar);
                     carDAO.update(oldCar);
                 } else {
+                    Car car = new Car();
+                    carFromPatch(carPatch, car);
                     Car newCar = carDAO.create(car);
                     oldHuman.setCar(newCar);
                 }
             }
         }
         if (dto.getCoordinates().isPresent()) {
-            Coordinates coordinates = dto.getCoordinates().orElse(null);
-            if (coordinates != null) {
+            CoordinatesPatch coordinatesPatch = dto.getCoordinates().orElse(null);
+            if (coordinatesPatch != null) {
                 Coordinates oldCoordinates = oldHuman.getCoordinates();
-                if (coordinates.getX() != null) {
-                    oldCoordinates.setX(coordinates.getX());
-                }
-                if (coordinates.getY() != null) {
-                    oldCoordinates.setY(coordinates.getY());
-                }
+                coordinatesFromPatch(coordinatesPatch, oldCoordinates);
                 coordinatesDAO.update(oldCoordinates);
-            }
+            } else throw new BadRequestException("Неправильное значение coordinates");
         }
-        return em.merge(oldHuman);
+        try {
+            return em.merge(oldHuman);
+        } catch (ConstraintViolationException e) {
+            throw new ConstraintViolationException(e.getConstraintViolations());
+        }
+    }
+
+    private void carFromPatch(CarPatch carPatch, Car car) throws BadRequestException {
+        if (carPatch.getName().isPresent()) {
+            String carPatchName = carPatch.getName().orElse(null);
+            if (carPatchName != null) {
+                car.setName(carPatchName);
+            } else throw new BadRequestException("Неправильное значение car.name");
+        }
+        if (carPatch.getCool().isPresent()) {
+            car.setCool(carPatch.getCool().orElse(null));
+        }
+    }
+
+    private void coordinatesFromPatch(CoordinatesPatch coordinatesPatch, Coordinates coordinates) throws BadRequestException {
+        if (coordinatesPatch.getX().isPresent()) {
+            Long xPatch = coordinatesPatch.getX().orElse(null);
+            if (xPatch != null) {
+                coordinates.setX(xPatch);
+            } else throw new BadRequestException("Неправильное значение coordinates.x");
+        }
+        if (coordinatesPatch.getY().isPresent()) {
+            Integer yPatch = coordinatesPatch.getY().orElse(null);
+            if (yPatch != null && yPatch > -313) {
+                coordinates.setY(yPatch);
+            } else throw new BadRequestException("Неправильное значение coordinates.y");
+        }
     }
 
     @Transactional
