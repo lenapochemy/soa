@@ -35,8 +35,7 @@ public class HumanResource {
     public Response getHuman(@PathParam("id") Integer id) {
         HumanBeing humanBeing = humanDAO.find(id);
         if (humanBeing == null) {
-            HumanResponse response = new HumanResponse(404, "Обьект " + id + " не найден.");
-            return Response.status(Response.Status.NOT_FOUND).entity(response).build();
+            return toResponse(404, "Обьект " + id + " не найден.");
         } else {
             return Response.ok(humanBeing).build();
         }
@@ -51,13 +50,10 @@ public class HumanResource {
             if (savedHuman != null) {
                 return Response.status(Response.Status.CREATED).entity(savedHuman).build();
             } else {
-                HumanResponse response = new HumanResponse(404, "Ресурс не найден");
-                return Response.status(Response.Status.NOT_FOUND).entity(response).build();
+                return toResponse(404, "Ресурс не найден");
             }
-
         } catch (ConstraintViolationException e) {
-            HumanResponse response = new HumanResponse(400, "Неправильный формат данных");
-            return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
+            return toResponse(400, "Неправильный формат данных");
         }
     }
 
@@ -68,8 +64,7 @@ public class HumanResource {
         if (humanDAO.delete(id)) {
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
-            HumanResponse response = new HumanResponse(404, "Ресурс не найден");
-            return Response.status(Response.Status.NOT_FOUND).entity(response).build();
+            return toResponse(404, "Ресурс не найден");
         }
     }
 
@@ -81,15 +76,13 @@ public class HumanResource {
         try {
             HumanBeing oldHuman = humanDAO.find(id);
             if (oldHuman == null) {
-                HumanResponse response = new HumanResponse(404, "Обьект " + id + " не найден.");
-                return Response.status(Response.Status.NOT_FOUND).entity(response).build();
+                return toResponse(404, "Обьект " + id + " не найден.");
             } else {
                 HumanBeing humanBeing = humanDAO.update(oldHuman, humanBeingPatch);
                 return Response.ok(humanBeing).build();
             }
         } catch (BadRequestException e) {
-            HumanResponse response = new HumanResponse(400, "Неправильный формат данных: " + e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
+            return toResponse(400, "Неправильный формат данных: " + e.getMessage());
         }
     }
 
@@ -100,8 +93,7 @@ public class HumanResource {
     public Response getWithGreaterMinutesOfWaiting(@PathParam("minutes") int minutes) {
         List<HumanBeing> humanBeingList = humanDAO.findWithGreaterMinutesOfWaiting(minutes);
         if (humanBeingList.isEmpty()) {
-            HumanResponse response = new HumanResponse(422, "У всех объектов время ожидания меньше");
-            return Response.status(422).entity(response).build();
+            return toResponse(422, "У всех объектов время ожидания меньше");
         } else {
             return Response.ok(humanBeingList).build();
         }
@@ -137,13 +129,17 @@ public class HumanResource {
         try {
             List<HumanBeing> humans = humanDAO.findAllFilterSortPaging(pageNumber, pageSize, filter, sortBy, sortOrder);
             if (humans.isEmpty()) {
-                HumanResponse response = new HumanResponse(422, "Нет обьектов, удовлетворящию условиям");
-                return Response.status(422).entity(response).build();
+                return toResponse(422, "Нет обьектов, удовлетворящию условиям");
             }
             return Response.ok(humans).build();
         } catch (BadRequestException e) {
-            HumanResponse response = new HumanResponse(400, "Неправильный формат данных: " + e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(response).build();
+            return toResponse(400, "Неправильный формат данных: " + e.getMessage());
         }
     }
+
+    private Response toResponse(int code, String message) {
+        HumanResponse response = new HumanResponse(code, message);
+        return Response.status(code).entity(response).build();
+    }
+
 }
