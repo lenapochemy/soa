@@ -1,45 +1,23 @@
 <script>
 
-// import SpaceComponent from "@/components/SpaceComponent.vue";
-// import LogOutComponent from "@/components/LogOutComponent.vue";
-// import SpecialComponent from "@/views/SpecialComponent.vue";
-// import AddChapterComponent from "@/components/add/AddChapterComponent.vue";
-// import AddCoordinateComponent from "@/components/add/AddCoordinateComponent.vue";
-// import AddSpaceMarineComponent from "@/components/add/AddSpaceMarineComponent.vue";
-// import AdminComponent from "@/components/AdminComponent.vue";
-// import EditChapterComponent from "@/components/edit/EditChapterComponent.vue";
-// import EditCoordComponent from "@/components/edit/EditCoordComponent.vue";
-// import EditSpaceMarineComponent from "@/components/edit/EditSpaceMarineComponent.vue";
 import Header from "@/components/Header.vue";
 import MainComponent from "@/components/MainComponent.vue";
-// import VisualizationComponent from "@/components/VisualizationComponent.vue";
-// import FileComponent from "@/components/import/FileComponent.vue";
-// import ImportHistoryComponent from "@/components/import/ImportHistoryComponent.vue";
+import UniqueMinutesComponent from "@/components/UniqueMinutesComponent.vue";
+import CreationDateGroupingComponent from "@/components/CreationDateGroupingComponent.vue";
 
 export default {
   components: {
     Header,
-    MainComponent
-    // AdminComponent,
-    // SpaceComponent,
-    // LogOutComponent,
-    // SpecialComponent,
-    // AddChapterComponent,
-    // AddCoordinateComponent,
-    // AddSpaceMarineComponent,
-    // EditChapterComponent,
-    // EditCoordComponent,
-    // EditSpaceMarineComponent,
-    // VisualizationComponent,
-    // FileComponent,
-    // ImportHistoryComponent
+    MainComponent,
+    UniqueMinutesComponent,
+    CreationDateGroupingComponent
   },
   data() {
     return {
       buttons: [
-        {"value": "Main", "name": "Main"},
-        //   {"value": "Admin", "name": "Admin profile"},
-        // {"value": "Space", "name": "Space marines"},
+        {"value": "Main", "name": "Все элементы"},
+        {"value": "UniqueMinutes", "name": "Уникальные значения времени ожидания"},
+        {"value": "CreationDateGrouping", "name": "Группировка по дате"},
         // {"value": "Special", "name": "Special operation"},
         // {"value": "AddCoordinate", "name": "Add coordinates"},
         // {"value": "AddChapter", "name": "Add chapter"},

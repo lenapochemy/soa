@@ -1,9 +1,9 @@
 
-export function validateNumber(number) {
+export function validatePositiveNumber(number) {
     return !(number === "") && !isNaN(parseInt(number)) && isFinite(number) && parseInt(number) > 0
 }
 
-export function validateCoordinates(number) {
+export function validateNumber(number) {
     return !(number === "") && !isNaN(parseInt(number)) && isFinite(number)
 }
 
