@@ -1,10 +1,11 @@
 <script setup>
 import {onMounted, ref} from "vue"
 import axios from "axios"
-import {validateFloatNumber, validatePositiveNumber} from "@/validators.js";
-import DeleteHumanComponent from "@/components/DeleteHumanComponent.vue";
-import FilterTrComponent from "@/components/filter/FilterTrComponent.vue";
-import TableDataComponent from "@/components/TableDataComponent.vue";
+import {validatePositiveNumber} from "@/validators.js";
+import FilterTrComponent from "@/components/table/FilterTrComponent.vue";
+import TableDataComponent from "@/components/table/TableDataComponent.vue";
+import GiveCarComponent from "@/components/GiveCarComponent.vue";
+import TableHeadComponent from "@/components/table/TableHeadComponent.vue";
 
 let humans = ref([])
 const baseUrl = 'http://localhost:8080/human-service/api'
@@ -19,28 +20,24 @@ let sortBy = ref('id')
 let sortOrder = ref('asc')
 let errorGet = ref()
 let response = ref()
+let teams = ref([])
 
-let greaterMinutes = ref()
-let errorGreaterMinutes = ref()
 
 const getHumans = async () => {
   try {
-    // collectFilter()
-    // console.log("in get after collect filter")
     const response = await axios.get(urlForGet());
     humans.value = response.data;
-    // console.log(humans.value)
+    updateTeamsList(response.data)
     currentPageNumber.value = pageNumber.value
     currentPageSize.value = pageSize.value
     if (!pageNumber.value) currentPageNumber.value = 1
     if (!pageSize.value) {
-      if(!pageNumber.value) {
+      if (!pageNumber.value) {
         currentPageSize.value = humans.value.length
       } else currentPageSize.value = 10
     }
     errorGet.value = undefined
   } catch (err) {
-    // console.log("problem with get")
     humans.value = undefined
     switch (err.response.status) {
       case 422:
@@ -51,6 +48,16 @@ const getHumans = async () => {
 }
 
 
+function updateTeamsList() {
+  teams.value = []
+  const uniqueTeams = new Set()
+  humans.value.forEach(human => {
+    if (human.teamNumber) {
+      uniqueTeams.add(human.teamNumber)
+    }
+  })
+  teams.value = [...uniqueTeams]
+}
 
 function urlForGet() {
   let url = baseUrl + "/humans?sort-by=" + sortBy.value + "&sort-order=" + sortOrder.value
@@ -66,13 +73,12 @@ function urlForGet() {
   return url
 }
 
-function updateSorting(param) {
-  if (sortBy.value === param && sortOrder.value === 'asc') {
-    sortOrder.value = 'desc'
-  } else sortOrder.value = 'asc'
-  sortBy.value = param
+function getHumansWithSorting(args) {
+  sortBy.value = args.sortBy
+  sortOrder.value = args.sortOrder
   getHumans()
 }
+
 
 function validatePageSize() {
   if (pageSize.value && !validatePositiveNumber(pageSize.value)) {
@@ -93,17 +99,6 @@ function validatePageNumber() {
     return true
   }
 }
-
-function validateGreaterMinutes() {
-  if (greaterMinutes.value && !validateFloatNumber(greaterMinutes.value)) {
-    errorGreaterMinutes.value = "Время ожидания должен быть числом"
-    return false
-  } else {
-    errorGreaterMinutes.value = undefined
-    return true
-  }
-}
-
 
 function nextPage() {
   currentPageNumber.value++
@@ -126,37 +121,7 @@ function updateTable() {
   }
 }
 
-const getHumansWithGreaterMinutes = async () => {
-  try {
-    const response = await axios.get(baseUrl + "/humans/minutes-of-waiting/" + greaterMinutes.value);
-    humans.value = response.data;
-    currentPageNumber.value = pageNumber.value
-    currentPageSize.value = pageSize.value
-    if (!pageNumber.value) currentPageNumber.value = 1
-    if (!pageSize.value) {
-      if(!pageNumber.value) {
-        currentPageSize.value = humans.value.length
-      } else currentPageSize.value = 10
-    }
-    errorGet.value = undefined
-  } catch (err) {
-    // console.log("problem with get")
-    humans.value = undefined
-    switch (err.response.status) {
-      case 422:
-        response.value = err.response.data
-        errorGet.value = response.value.message
-    }
-  }
-}
-
-function updateForGreaterMinutes(){
-  if(validateGreaterMinutes()){
-    getHumansWithGreaterMinutes()
-  }
-}
-
-function updateWithFilter(fil){
+function updateWithFilter(fil) {
   console.log(fil)
   filter = fil
   console.log(filter.value)
@@ -189,38 +154,13 @@ onMounted(
       <br>
       <button @click.prevent="updateTable">Показать</button>
     </div>
-    <div>
-      <span>Время ожидания больше чем </span>
-      <br>
-      <input type="text" v-model="greaterMinutes" @change="validateGreaterMinutes">
-      <div v-if="errorGreaterMinutes" class="error">{{ errorGreaterMinutes }}</div>
-      <input type="submit" @click.prevent="updateForGreaterMinutes" value="показать"/>
-    </div>
 
-
-
+    <give-car-component :teams="teams" @added-cars="getHumans"/>
 
     <table border="1">
-      <thead>
-      <tr>
-        <th type="submit" @click.prevent="updateSorting('id')">id</th>
-        <th type="submit" @click.prevent="updateSorting('name')">имя</th>
-        <th type="submit" @click.prevent="updateSorting('creationDate')">дата создания</th>
-        <th type="submit" @click.prevent="updateSorting('realHero')">герой</th>
-        <th type="submit" @click.prevent="updateSorting('teamNumber')">номер команды</th>
-        <th type="submit" @click.prevent="updateSorting('hasToothpick')">есть зубочистка</th>
-        <th type="submit" @click.prevent="updateSorting('impactSpeed')">скорость удара</th>
-        <th type="submit" @click.prevent="updateSorting('minutesOfWaiting')">минуты ожидания</th>
-        <th type="submit" @click.prevent="updateSorting('weaponType')">тип оружия</th>
-        <th type="submit" @click.prevent="updateSorting('mood')">настроение</th>
-        <th type="submit" @click.prevent="updateSorting('car.name')">название машины</th>
-        <th type="submit" @click.prevent="updateSorting('car.cool')">крутая машина</th>
-        <th type="submit" @click.prevent="updateSorting('coordinates.x')">коорд x</th>
-        <th type="submit" @click.prevent="updateSorting('coordinates.y')">коорд y</th>
-      </tr>
-      </thead>
+      <table-head-component :sort="true" @updated-sorting="args => getHumansWithSorting(args)"/>
       <tbody>
-      <filter-tr-component @update="updateWithFilter($event)" />
+      <filter-tr-component @update="updateWithFilter($event)"/>
       <table-data-component :humans="humans" @deleted="getHumans"/>
       </tbody>
     </table>
@@ -230,7 +170,7 @@ onMounted(
   </div>
 </template>
 
-<style scoped>
+<style>
 .error {
   color: red;
 }
@@ -240,7 +180,6 @@ thead {
   //font-size: large;
   font-weight: bold;
 }
-
 
 
 </style>

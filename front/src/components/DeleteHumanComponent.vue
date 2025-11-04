@@ -1,8 +1,6 @@
 <script setup>
-import {ref} from 'vue'
 import axios from "axios";
 
-// let id = ref()
 const props = defineProps({
   id: Number
 })
@@ -10,10 +8,11 @@ const props = defineProps({
 const baseUrl = 'http://localhost:8080/human-service/api/humans'
 const emit = defineEmits(['deleted']);
 const deleteHuman = async (id) => {
-  try{
+  try {
     const response = await axios.delete(baseUrl + "/" + id)
     emit('deleted')
-  } catch (err){
+  } catch (err) {
+    console.log(err)
     console.log(err.response.status)
   }
 }

@@ -34,8 +34,8 @@ onMounted(
     </thead>
     <tbody>
     <tr v-for="date in creationDate">
-      <td>{{date.creationDate}}</td>
-      <td>{{date.count}}</td>
+      <td>{{ date.creationDate }}</td>
+      <td>{{ date.count }}</td>
     </tr>
 
     </tbody>

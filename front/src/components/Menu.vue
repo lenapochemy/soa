@@ -4,13 +4,21 @@ import Header from "@/components/Header.vue";
 import MainComponent from "@/components/MainComponent.vue";
 import UniqueMinutesComponent from "@/components/UniqueMinutesComponent.vue";
 import CreationDateGroupingComponent from "@/components/CreationDateGroupingComponent.vue";
+import HumanComponent from "@/components/HumanComponent.vue";
+import CreateHumanComponent from "@/components/CreateHumanComponent.vue";
+import DeleteFromTeamComponent from "@/components/DeleteFromTeamComponent.vue";
+import GreaterMinutesComponent from "@/components/GreaterMinutesComponent.vue";
 
 export default {
   components: {
     Header,
     MainComponent,
     UniqueMinutesComponent,
-    CreationDateGroupingComponent
+    CreationDateGroupingComponent,
+    HumanComponent,
+    CreateHumanComponent,
+    DeleteFromTeamComponent,
+    GreaterMinutesComponent
   },
   data() {
     return {
@@ -18,11 +26,10 @@ export default {
         {"value": "Main", "name": "Все элементы"},
         {"value": "UniqueMinutes", "name": "Уникальные значения времени ожидания"},
         {"value": "CreationDateGrouping", "name": "Группировка по дате"},
-        // {"value": "Special", "name": "Special operation"},
-        // {"value": "AddCoordinate", "name": "Add coordinates"},
-        // {"value": "AddChapter", "name": "Add chapter"},
-        // {"value": "AddSpaceMarine", "name": "Add space marine"},
-        // {"value": "EditChapter", "name": "Chapter editing info"},
+        {"value": "Human", "name": "Получить по id"},
+        {"value": "CreateHuman", "name": "Создать"},
+        {"value": "DeleteFromTeam", "name": "Удалить из команды"},
+        {"value": "GreaterMinutes", "name": "Элементы с большим временем ожидания"},
         // {"value": "EditCoord", "name": "Coordinates editing info"},
         // {"value": "EditSpaceMarine", "name": "Space marine editing info"},
         // {"value": "Visualization", "name": "Visualization"},
@@ -45,7 +52,7 @@ export default {
 <template>
   <header>
     <Header/>
-<!--    <LogOutComponent/>-->
+    <!--    <LogOutComponent/>-->
   </header>
   <body>
   <div>

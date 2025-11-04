@@ -1,6 +1,6 @@
 <script setup>
 
-import FilterOperatorComponent from "@/components/filter/FilterOperatorComponent.vue";
+import FilterOperatorComponent from "@/components/table/FilterOperatorComponent.vue";
 import {validateNumber, validateFloatNumber, validatePositiveNumber, validateString} from "@/validators.js";
 import {ref} from "vue";
 
@@ -266,7 +266,6 @@ function collectFilter() {
       <span class="error">{{ filterNameError }}</span>
     </td>
     <td>
-      <!--          creationDate-->
       <FilterOperatorComponent @operator="filterCreationDateOperator = $event"/>
       <input size="10" type="text" v-model="filterCreationDateValue" @change="validateCreationDate"/>
       <span class="error">{{ filterCreationDateError }}</span>
@@ -278,7 +277,6 @@ function collectFilter() {
         <option value="true">да</option>
         <option value="false">нет</option>
       </select>
-      <!--          <input type="text" v-model="filterRealHeroValue" @change="validateRealHero"/>-->
       <span class="error">{{ filterRealHeroError }}</span>
     </td>
     <td>
@@ -293,7 +291,6 @@ function collectFilter() {
         <option value="true">да</option>
         <option value="false">нет</option>
       </select>
-      <!--          <input type="text" v-model="filterHasToothpickValue" @change="validateHasToothpick"/>-->
       <span class="error">{{ filterHasToothpickError }}</span>
     </td>
     <td>
@@ -315,7 +312,6 @@ function collectFilter() {
         <option value="MACHINE_GUN">пулемет</option>
         <option value="BAT">бита</option>
       </select>
-      <!--          <input type="text" v-model="filterIdValue" @change="validateId"/>-->
       <span class="error">{{ filterWeaponTypeError }}</span>
     </td>
     <td>
@@ -326,7 +322,6 @@ function collectFilter() {
         <option value="SORROW">грусть</option>
         <option value="RAGE">ярость</option>
       </select>
-      <!--          <input type="text" v-model="filterIdValue" @change="validateId"/>-->
       <span class="error">{{ filterMoodError }}</span>
     </td>
     <td>
@@ -341,7 +336,6 @@ function collectFilter() {
         <option value="true">да</option>
         <option value="false">нет</option>
       </select>
-      <!--          <input type="text" v-model="filterHasToothpickValue" @change="validateHasToothpick"/>-->
       <span class="error">{{ filterCarCoolError }}</span>
     </td>
     <td>
@@ -354,7 +348,6 @@ function collectFilter() {
       <input size="5" type="text" v-model="filterCoordinatesYValue" @change="validateCoordinatesY"/>
       <span class="error">{{ filterCoordinatesYError }}</span>
     </td>
-
 
     <td><input class="but" type="submit" @click.prevent="collectFilter" value="применить фильтры"/></td>
   </tr>

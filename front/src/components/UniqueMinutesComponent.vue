@@ -15,13 +15,7 @@ const getUniqueMinutes = async () => {
     unique.value = response.data;
     errorUnique.value = undefined
   } catch (err) {
-    // console.log("problem with get")
     unique.value = undefined
-    // switch (err.response.status) {
-    //   case 422:
-    //     response.value = err.response.data
-    //     errorGet.value = response.value.message
-    // }
   }
 }
 
@@ -32,14 +26,12 @@ onMounted(
 </script>
 
 <template>
-<div>
-  <span>Уникальные значения времени ожидания:</span>
-  <div v-for="minutes in unique">
-    <span>{{minutes}}</span>
+  <div>
+    <span>Уникальные значения времени ожидания:</span>
+    <div v-for="minutes in unique">
+      <span>{{ minutes }}</span>
+    </div>
   </div>
-
-</div>
-
 
 </template>
 
