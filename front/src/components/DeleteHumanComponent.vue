@@ -1,15 +1,15 @@
 <script setup>
 import axios from "axios";
+import {baseHumansUrl} from "@/main.js";
 
 const props = defineProps({
   id: Number
 })
 
-const baseUrl = 'http://localhost:8080/human-service/api/humans'
 const emit = defineEmits(['deleted']);
 const deleteHuman = async (id) => {
   try {
-    const response = await axios.delete(baseUrl + "/" + id)
+    const response = await axios.delete(baseHumansUrl + "/" + id)
     emit('deleted')
   } catch (err) {
     console.log(err)

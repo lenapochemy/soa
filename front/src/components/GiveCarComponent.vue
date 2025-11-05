@@ -1,11 +1,10 @@
 <script setup>
 import axios from "axios";
 import {ref} from "vue";
+import {baseTeamsUrl} from "@/main.js"
 
-
-const teamUrl = 'http://localhost:1214/team-service/heroes/team/'
 const props = defineProps({
-  teams: []
+  teams: Array
 })
 
 const emit = defineEmits(['addedCars']);
@@ -29,7 +28,7 @@ function validateTeamId() {
 const giveCars = async () => {
   if (validateTeamId()) {
     try {
-      const response = await axios.post(teamUrl + teamId.value + "/car/add");
+      const response = await axios.post(baseTeamsUrl + teamId.value + "/car/add");
       // giveCarsRes.value = response.data.message
       emit('addedCars')
       // await getHumans()

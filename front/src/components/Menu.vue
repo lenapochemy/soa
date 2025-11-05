@@ -6,8 +6,8 @@ import UniqueMinutesComponent from "@/components/UniqueMinutesComponent.vue";
 import CreationDateGroupingComponent from "@/components/CreationDateGroupingComponent.vue";
 import HumanComponent from "@/components/HumanComponent.vue";
 import CreateHumanComponent from "@/components/CreateHumanComponent.vue";
-import DeleteFromTeamComponent from "@/components/DeleteFromTeamComponent.vue";
 import GreaterMinutesComponent from "@/components/GreaterMinutesComponent.vue";
+import UpdateHumanComponent from "@/components/UpdateHumanComponent.vue";
 
 export default {
   components: {
@@ -17,8 +17,8 @@ export default {
     CreationDateGroupingComponent,
     HumanComponent,
     CreateHumanComponent,
-    DeleteFromTeamComponent,
-    GreaterMinutesComponent
+    GreaterMinutesComponent,
+    UpdateHumanComponent
   },
   data() {
     return {
@@ -28,9 +28,8 @@ export default {
         {"value": "CreationDateGrouping", "name": "Группировка по дате"},
         {"value": "Human", "name": "Получить по id"},
         {"value": "CreateHuman", "name": "Создать"},
-        {"value": "DeleteFromTeam", "name": "Удалить из команды"},
         {"value": "GreaterMinutes", "name": "Элементы с большим временем ожидания"},
-        // {"value": "EditCoord", "name": "Coordinates editing info"},
+        {"value": "UpdateHuman", "name": "Обновить"},
         // {"value": "EditSpaceMarine", "name": "Space marine editing info"},
         // {"value": "Visualization", "name": "Visualization"},
         // {"value": "File", "name": "Import file"},
@@ -63,7 +62,7 @@ export default {
         v-bind:class="['tab-button', {active: currentButton === button.value}]"
         v-on:click="currentButton = button.value">{{ button.name }}
     </button>
-    <component v-bind:is="currentButtonComponent"></component>
+    <component v-bind:is="currentButtonComponent" :can-delete="true"></component>
   </div>
   <br>
   </body>

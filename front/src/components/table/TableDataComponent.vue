@@ -3,7 +3,8 @@ import DeleteHumanComponent from "@/components/DeleteHumanComponent.vue";
 import DeleteFromTeamComponent from "@/components/DeleteFromTeamComponent.vue";
 
 const props = defineProps({
-  humans: [Object]
+  humans: [Object],
+  canDelete: Boolean
 })
 
 const emit = defineEmits(['deleted']);
@@ -56,7 +57,7 @@ function deleteHuman() {
 
     <td>{{ human.coordinates.x }}</td>
     <td>{{ human.coordinates.y }}</td>
-    <td>
+    <td v-if="canDelete">
       <delete-human-component @deleted="deleteHuman" :id="human.id"></delete-human-component>
       <delete-from-team-component v-if="human.teamNumber" @deleted-from-team="deleteHuman" :human-id="human.id"
                                   :team-id="human.teamNumber"></delete-from-team-component>

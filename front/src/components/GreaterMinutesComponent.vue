@@ -5,8 +5,7 @@ import {validateFloatNumber} from "@/validators.js";
 import {ref} from "vue";
 import TableDataComponent from "@/components/table/TableDataComponent.vue";
 import TableHeadComponent from "@/components/table/TableHeadComponent.vue";
-
-const baseUrl = 'http://localhost:8080/human-service/api'
+import {baseHumansUrl} from "@/main.js";
 
 let greaterMinutes = ref()
 let errorGreaterMinutes = ref()
@@ -27,7 +26,7 @@ function validateGreaterMinutes() {
 
 const getHumansWithGreaterMinutes = async () => {
   try {
-    const response = await axios.get(baseUrl + "/humans/minutes-of-waiting/" + greaterMinutes.value);
+    const response = await axios.get(baseHumansUrl + "/minutes-of-waiting/" + greaterMinutes.value);
     humans.value = response.data;
     errorGreaterMinutes.value = undefined
   } catch (err) {
@@ -59,7 +58,7 @@ function updateForGreaterMinutes() {
   <table border="1">
     <table-head-component :sort="false"/>
     <tbody>
-    <table-data-component :humans="humans" @deleted="getHumansWithGreaterMinutes"/>
+    <table-data-component :can-delete="true" :humans="humans" @deleted="getHumansWithGreaterMinutes"/>
     </tbody>
   </table>
 </template>

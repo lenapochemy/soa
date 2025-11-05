@@ -1,18 +1,18 @@
 <script setup>
 
 import axios from "axios";
+import {baseTeamsUrl} from "@/main.js";
 
 const props = defineProps({
   teamId: Number,
   humanId: Number
 })
 
-const baseUrl = 'http://localhost:1214/team-service/heroes/team/'
 const emit = defineEmits(['deletedFromTeam']);
 const deleteHumanFromTeam = async (teamId, humanId) => {
   try {
     console.log(teamId + " " + humanId)
-    const response = await axios.delete(baseUrl + teamId + "/remove/" + humanId)
+    const response = await axios.delete(baseTeamsUrl + teamId + "/remove/" + humanId)
     emit('deletedFromTeam')
   } catch (err) {
     console.log(err)

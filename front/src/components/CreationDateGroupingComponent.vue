@@ -1,16 +1,14 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import axios from "axios";
+import {baseHumansUrl} from "@/main.js";
 
 let creationDate = ref()
 let errorCreationDate = ref()
 
-const baseUrl = 'http://localhost:8080/human-service/api'
-
-
 const getGrouping = async () => {
   try {
-    const response = await axios.get(baseUrl + "/humans/creation-date");
+    const response = await axios.get(baseHumansUrl + "/creation-date");
     creationDate.value = response.data;
     errorCreationDate.value = undefined
   } catch (err) {

@@ -2,16 +2,15 @@
 
 import {onMounted, ref} from "vue";
 import axios from "axios";
+import {baseHumansUrl} from "@/main.js";
 
 let unique = ref()
 let errorUnique = ref()
 
-const baseUrl = 'http://localhost:8080/human-service/api'
-
 
 const getUniqueMinutes = async () => {
   try {
-    const response = await axios.get(baseUrl + "/humans/minutes-of-waiting/unique");
+    const response = await axios.get(baseHumansUrl + "/minutes-of-waiting/unique");
     unique.value = response.data;
     errorUnique.value = undefined
   } catch (err) {
@@ -28,9 +27,16 @@ onMounted(
 <template>
   <div>
     <span>Уникальные значения времени ожидания:</span>
-    <div v-for="minutes in unique">
-      <span>{{ minutes }}</span>
-    </div>
+    <table border="1">
+      <thead>
+      <tr>
+        <td>Время ожидания</td>
+      </tr>
+      </thead>
+      <tr v-for="minutes in unique">
+        <td>{{ minutes }}</td>
+      </tr>
+    </table>
   </div>
 
 </template>

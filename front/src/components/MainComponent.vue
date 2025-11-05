@@ -6,9 +6,10 @@ import FilterTrComponent from "@/components/table/FilterTrComponent.vue";
 import TableDataComponent from "@/components/table/TableDataComponent.vue";
 import GiveCarComponent from "@/components/GiveCarComponent.vue";
 import TableHeadComponent from "@/components/table/TableHeadComponent.vue";
+import {baseHumansUrl} from "@/main.js";
 
 let humans = ref([])
-const baseUrl = 'http://localhost:8080/human-service/api'
+
 let pageNumber = ref()
 let currentPageNumber = ref(1)
 let errorPageNumber = ref()
@@ -60,7 +61,7 @@ function updateTeamsList() {
 }
 
 function urlForGet() {
-  let url = baseUrl + "/humans?sort-by=" + sortBy.value + "&sort-order=" + sortOrder.value
+  let url = baseHumansUrl + "?sort-by=" + sortBy.value + "&sort-order=" + sortOrder.value
   if (pageSize.value) {
     url += "&page-size=" + pageSize.value
   }
@@ -161,7 +162,7 @@ onMounted(
       <table-head-component :sort="true" @updated-sorting="args => getHumansWithSorting(args)"/>
       <tbody>
       <filter-tr-component @update="updateWithFilter($event)"/>
-      <table-data-component :humans="humans" @deleted="getHumans"/>
+      <table-data-component :can-delete="true" :humans="humans" @deleted="getHumans"/>
       </tbody>
     </table>
     <div class="error">{{ errorGet }}</div>
@@ -180,6 +181,29 @@ thead {
   //font-size: large;
   font-weight: bold;
 }
+form > div, fieldset {
+  margin-bottom: 1em;
+}
 
+label {
+  display: block;
+  margin-bottom: 0.2em;
+}
 
+input[type="text"],
+input[type="number"],
+select {
+  width: 100px;
+  padding: 0.3em;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 0.5em 2em;
+  cursor: pointer;
+}
+
+.res {
+  color: blue;
+}
 </style>

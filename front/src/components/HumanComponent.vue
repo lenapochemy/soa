@@ -1,27 +1,34 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import axios from "axios";
 import TableDataComponent from "@/components/table/TableDataComponent.vue";
 import {validatePositiveNumber} from "@/validators.js";
 import TableHeadComponent from "@/components/table/TableHeadComponent.vue";
+import {baseHumansUrl} from "@/main.js";
+
+const props = defineProps({
+  canDelete: Boolean,
+  humanId: Number
+})
 
 let id = ref()
 let humans = ref([])
 let errorGetHuman = ref()
 let errorId = ref()
 
-const baseUrl = 'http://localhost:8080/human-service/api'
-
+const emit = defineEmits(['human']);
 
 const getHuman = async () => {
   try {
     humans.value = []
-    const response = await axios.get(baseUrl + "/humans/" + id.value);
+    const response = await axios.get(baseHumansUrl + "/" + id.value);
     humans.value.push(response.data)
     errorGetHuman.value = undefined
+    emit('human', humans.value[0])
   } catch (err) {
     console.log(err)
     humans.value = undefined
+    emit('human', humans.value)
     errorGetHuman.value = err.response.data.message
   }
 }
@@ -40,6 +47,14 @@ function validateId() {
   }
 }
 
+watch(() => props.humanId,  (newId) => {
+  console.log("aaa " + newId + " a " + props.humanId)
+  if(newId !== undefined) {
+    id.value = newId
+    getHuman()
+  }
+}, { immediate: true, deep: true });
+
 </script>
 
 <template>
@@ -50,10 +65,10 @@ function validateId() {
   </div>
 
 
-  <table border="1">
+  <table border="1" v-if="humans">
     <table-head-component :sort="false"/>
     <tbody>
-    <table-data-component :humans="humans" @deleted="getHuman"/>
+    <table-data-component :can-delete="canDelete" :humans="humans" @deleted="getHuman"/>
     </tbody>
   </table>
   <span class="error">{{ errorGetHuman }}</span>

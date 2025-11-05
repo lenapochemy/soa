@@ -257,7 +257,7 @@ function collectFilter() {
   <tr>
     <td>
       <FilterOperatorComponent @operator="filterIdOperator = $event"/>
-      <input size="5" type="text" v-model="filterIdValue" @change="validateId"/>
+      <input size="5" type="number" v-model="filterIdValue" @change="validateId"/>
       <span class="error">{{ filterIdError }}</span>
     </td>
     <td>
@@ -267,7 +267,7 @@ function collectFilter() {
     </td>
     <td>
       <FilterOperatorComponent @operator="filterCreationDateOperator = $event"/>
-      <input size="10" type="text" v-model="filterCreationDateValue" @change="validateCreationDate"/>
+      <input size="10" type="date" v-model="filterCreationDateValue" @change="validateCreationDate"/>
       <span class="error">{{ filterCreationDateError }}</span>
     </td>
     <td>
@@ -281,7 +281,7 @@ function collectFilter() {
     </td>
     <td>
       <FilterOperatorComponent @operator="filterTeamNumberOperator= $event"/>
-      <input size="5" type="text" v-model="filterTeamNumberValue" @change="validateTeamNumber"/>
+      <input size="5" type="number" v-model="filterTeamNumberValue" @change="validateTeamNumber"/>
       <span class="error">{{ filterTeamNumberError }}</span>
     </td>
     <td>
@@ -295,12 +295,12 @@ function collectFilter() {
     </td>
     <td>
       <FilterOperatorComponent @operator="filterImpactSpeedOperator = $event"/>
-      <input size="5" type="text" v-model="filterImpactSpeedValue" @change="validateImpactSpeed"/>
+      <input size="5" type="number" v-model="filterImpactSpeedValue" @change="validateImpactSpeed"/>
       <span class="error">{{ filterImpactSpeedError }}</span>
     </td>
     <td>
       <FilterOperatorComponent @operator="filterMinutesOfWaitingOperator = $event"/>
-      <input size="5" type="text" v-model="filterMinutesOfWaitingValue" @change="validateMinutesOfWaiting"/>
+      <input size="5" type="number" v-model="filterMinutesOfWaitingValue" @change="validateMinutesOfWaiting"/>
       <span class="error">{{ filterMinutesOfWaitingError }}</span>
     </td>
     <td>
@@ -340,12 +340,12 @@ function collectFilter() {
     </td>
     <td>
       <FilterOperatorComponent @operator="filterCoordinatesXOperator = $event"/>
-      <input size="5" type="text" v-model="filterCoordinatesXValue" @change="validateCoordinatesX"/>
+      <input size="5" type="number" v-model="filterCoordinatesXValue" @change="validateCoordinatesX"/>
       <span class="error">{{ filterCoordinatesXError }}</span>
     </td>
     <td>
       <FilterOperatorComponent @operator="filterCoordinatesYOperator = $event"/>
-      <input size="5" type="text" v-model="filterCoordinatesYValue" @change="validateCoordinatesY"/>
+      <input size="5" type="number" v-model="filterCoordinatesYValue" @change="validateCoordinatesY"/>
       <span class="error">{{ filterCoordinatesYError }}</span>
     </td>
 
@@ -358,4 +358,13 @@ function collectFilter() {
 .but {
   background-color: deeppink;
 }
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100px;
+  padding: 0.3em;
+  box-sizing: border-box;
+}
+
 </style>
