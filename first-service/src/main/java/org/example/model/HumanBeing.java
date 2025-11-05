@@ -32,6 +32,7 @@ public class HumanBeing {
     @NotNull
     private LocalDate creationDate;
     private Boolean realHero;
+    @Min(value = 1)
     private Integer teamNumber;
     private Boolean hasToothpick;
     @Max(value = 981)

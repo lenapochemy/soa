@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", methods = {RequestMethod.DELETE, RequestMethod.POST, RequestMethod.OPTIONS})
 @RequestMapping("/heroes/team")
 public class TeamController {
 
@@ -21,7 +22,7 @@ public class TeamController {
     public ResponseEntity<?> addCars(@PathVariable("team-id") Integer teamId) {
         try {
             if (clientService.addCarToHumans(teamId)) {
-                return toResponse(200, "У героев команды 2, у которых не было машины, теперь есть красная Lada Kalina.");
+                return toResponse(200, "У героев команды " + teamId + ", у которых не было машины, теперь есть красная Lada Kalina.");
             } else {
                 return toResponse(422, "У всех членов команды " + teamId + " уже есть автомобиль.");
             }

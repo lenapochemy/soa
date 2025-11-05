@@ -111,7 +111,7 @@ public class ClientService {
         if (humanBeing == null) {
             throw new HumanNotFoundException();
         }
-        if (humanBeing.getTeamNumber() != teamId) {
+        if (humanBeing.getTeamNumber() == null || humanBeing.getTeamNumber() != teamId) {
             throw new TeamException();
         }
         humanBeing.setTeamNumber(null);

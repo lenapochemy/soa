@@ -14,6 +14,7 @@ public class HumanApplication extends Application {
         Set<Class<?>> classes = new HashSet<>();
         classes.add(HumanResource.class);
         classes.add(ObjectMapperProvider.class);
+        classes.add(CORSFilter.class);
         return classes;
     }
 }
