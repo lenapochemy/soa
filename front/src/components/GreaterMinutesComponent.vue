@@ -31,10 +31,7 @@ const getHumansWithGreaterMinutes = async () => {
     errorGreaterMinutes.value = undefined
   } catch (err) {
     humans.value = undefined
-    switch (err.response.status) {
-      case 422:
-        errorGreaterMinutes.value = err.response.data.message
-    }
+    errorGreaterMinutes.value = err.response.data.message
   }
 }
 

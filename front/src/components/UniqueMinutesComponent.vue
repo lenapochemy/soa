@@ -15,6 +15,7 @@ const getUniqueMinutes = async () => {
     errorUnique.value = undefined
   } catch (err) {
     unique.value = undefined
+    errorUnique.value = err.response.data.message
   }
 }
 
@@ -37,6 +38,7 @@ onMounted(
         <td>{{ minutes }}</td>
       </tr>
     </table>
+    <div v-if="errorUnique" class="error">{{errorUnique}}</div>
   </div>
 
 </template>

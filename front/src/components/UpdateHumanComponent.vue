@@ -183,5 +183,11 @@ const update = async () => {
 </template>
 
 <style scoped>
-
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.3em;
+  box-sizing: border-box;
+}
 </style>

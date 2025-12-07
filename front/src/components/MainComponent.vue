@@ -40,11 +40,7 @@ const getHumans = async () => {
     errorGet.value = undefined
   } catch (err) {
     humans.value = undefined
-    switch (err.response.status) {
-      case 422:
-        response.value = err.response.data
-        errorGet.value = response.value.message
-    }
+    errorGet.value = err.response.data.message
   }
 }
 
@@ -165,7 +161,7 @@ onMounted(
       <table-data-component :can-delete="true" :humans="humans" @deleted="getHumans"/>
       </tbody>
     </table>
-    <div class="error">{{ errorGet }}</div>
+    <div v-if="errorGet" class="error">{{ errorGet }}</div>
 
 
   </div>

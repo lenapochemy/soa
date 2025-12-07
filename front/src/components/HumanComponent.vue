@@ -71,7 +71,7 @@ watch(() => props.humanId,  (newId) => {
     <table-data-component :can-delete="canDelete" :humans="humans" @deleted="getHuman"/>
     </tbody>
   </table>
-  <span class="error">{{ errorGetHuman }}</span>
+  <div v-if="errorGetHuman" class="error">{{ errorGetHuman }}</div>
 </template>
 
 <style scoped>

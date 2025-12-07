@@ -13,6 +13,7 @@ const emit = defineEmits(['addedCars']);
 let teamId = ref("")
 let errorTeamId = ref()
 let giveCarsRes = ref()
+let giveCarsError = ref()
 
 function validateTeamId() {
   console.log("aaaa in validate team id " + teamId.value)
@@ -29,16 +30,9 @@ const giveCars = async () => {
   if (validateTeamId()) {
     try {
       const response = await axios.post(baseTeamsUrl + teamId.value + "/car/add");
-      // giveCarsRes.value = response.data.message
       emit('addedCars')
-      // await getHumans()
     } catch (err) {
-      // console.log("problem with get")
-      giveCarsRes.value = err.response.data.message
-      switch (err.response.status) {
-        case 422:
-          giveCarsRes.value = err.response.data.message
-      }
+      giveCarsError.value = err.response.data.message
     }
   }
 }
@@ -53,7 +47,8 @@ const giveCars = async () => {
     </select>
     <div v-if="errorTeamId" class="error">{{ errorTeamId }}</div>
     <input type="submit" @click.prevent="giveCars" value="выдать машины"/>
-    <div v-if="giveCarsRes" class="error">{{ giveCarsRes }}</div>
+    <div v-if="giveCarsRes" class="res">{{ giveCarsRes }}</div>
+    <div v-if="giveCarsError" class="error">{{ giveCarsError }}</div>
   </div>
 </template>
 
