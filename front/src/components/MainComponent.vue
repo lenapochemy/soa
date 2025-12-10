@@ -134,72 +134,359 @@ onMounted(
 
 <template>
 
-  <div>
+  <div id="app">
+    <!-- Page Controls -->
     <div id="page-info">
-      <span>Номер страницы {{ currentPageNumber }}</span>
-      <br>
-      <input type="text" v-model="pageNumber" @change="validatePageNumber">
-      <div v-if="errorPageNumber" class="error">{{ errorPageNumber }}</div>
-      <br>
-      <button @click.prevent="prevPage" v-if="currentPageNumber > 1">Предыдущая страница</button>
-      <button @click.prevent="nextPage">Следующая страница</button>
-      <br>
-      <span>Размер страницы {{ currentPageSize }}</span>
-      <br>
-      <input type="text" v-model="pageSize" @change="validatePageSize">
-      <div v-if="errorPageSize" class="error">{{ errorPageSize }}</div>
-      <br>
-      <button @click.prevent="updateTable">Показать</button>
+      <div class="page-controls">
+        <div class="control-group">
+          <label for="pageNumber">Текущая страница: {{ currentPageNumber }}</label>
+          <input
+              id="pageNumber"
+              type="text"
+              v-model="pageNumber"
+              @change="validatePageNumber"
+              class="control-input"
+              placeholder="Номер страницы"
+          >
+          <div v-if="errorPageNumber" class="error mt-1">{{ errorPageNumber }}</div>
+        </div>
+
+        <div class="control-group">
+          <label for="pageSize">Размер страницы: {{ currentPageSize }}</label>
+          <input
+              id="pageSize"
+              type="text"
+              v-model="pageSize"
+              @change="validatePageSize"
+              class="control-input"
+              placeholder="Размер"
+          >
+          <div v-if="errorPageSize" class="error mt-1">{{ errorPageSize }}</div>
+        </div>
+      </div>
+
+      <div class="page-buttons">
+        <button
+            @click.prevent="prevPage"
+            :disabled="currentPageNumber <= 1"
+            class="btn btn-secondary"
+        >
+          ← Предыдущая
+        </button>
+
+        <button
+            @click.prevent="updateTable"
+            class="btn btn-primary"
+        >
+          Обновить таблицу
+        </button>
+
+        <button
+            @click.prevent="nextPage"
+            class="btn btn-secondary"
+        >
+          Следующая →
+        </button>
+      </div>
     </div>
 
-    <give-car-component :teams="teams" @added-cars="getHumans"/>
+    <div class="table-container">
+      <table>
+        <table-head-component
+            :sort="true"
+            @updated-sorting="args => getHumansWithSorting(args)"
+        />
+        <tbody>
+        <filter-tr-component @update="updateWithFilter($event)"/>
+        <table-data-component
+            :can-delete="true"
+            :humans="humans"
+            @deleted="getHumans"
+        />
+        </tbody>
+      </table>
 
-    <table border="1">
-      <table-head-component :sort="true" @updated-sorting="args => getHumansWithSorting(args)"/>
-      <tbody>
-      <filter-tr-component @update="updateWithFilter($event)"/>
-      <table-data-component :can-delete="true" :humans="humans" @deleted="getHumans"/>
-      </tbody>
-    </table>
-    <div v-if="errorGet" class="error">{{ errorGet }}</div>
-
-
+      <div v-if="errorGet" class="error mt-2">{{ errorGet }}</div>
+    </div>
   </div>
+
+  <give-car-component :teams="teams" @added-cars="getHumans"/>
+
 </template>
 
 <style>
-.error {
-  color: red;
+/* === CSS Variables for consistent theming === */
+:root {
+  --primary-color: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary-color: #7209b7;
+  --success-color: #4cc9f0;
+  --danger-color: #f72585;
+  --warning-color: #f8961e;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --gray-light: #e9ecef;
+  --gray: #adb5bd;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+/* === Base styles === */
+#app {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-color);
+  padding: 20px;
+  max-width: 2000px;
+  margin: 0 auto;
+
+}
+
+/* === Page Controls Styling === */
+#page-info {
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 2rem;
+  border: 1px solid var(--gray-light);
+
+}
+
+#page-info > * {
+  margin-bottom: 1rem;
+}
+
+#page-info > *:last-child {
+  margin-bottom: 0;
+}
+
+.page-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.control-input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--gray);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  width: 120px;
+}
+
+.control-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.page-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* === Button Styles === */
+.btn {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--light-color);
+  color: var(--dark-color);
+  border: 1px solid var(--gray);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-light);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* === Table Styling === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
 }
 
 thead {
-  background-color: deeppink;
-  //font-size: large;
-  font-weight: bold;
-}
-form > div, fieldset {
-  margin-bottom: 1em;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.2em;
+thead th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-input[type="text"],
-input[type="number"],
-select {
-  width: 100px;
-  padding: 0.3em;
-  box-sizing: border-box;
-}
-
-button {
-  padding: 0.5em 2em;
+thead th:hover {
+  background-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }
 
-.res {
-  color: blue;
+tbody tr {
+  border-bottom: 1px solid var(--gray-light);
+  transition: var(--transition);
+}
+
+tbody tr:hover {
+  background-color: rgba(67, 97, 238, 0.05);
+}
+
+tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+/* === Error and Status Messages === */
+.error {
+  background-color: #fee;
+  color: var(--danger-color);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--danger-color);
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+/* === Utility Classes === */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-1 {
+  margin-top: 0.5rem;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+.mt-3 {
+  margin-top: 1.5rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 1rem;
+}
+
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-1 {
+  gap: 0.5rem;
+}
+
+.gap-2 {
+  gap: 1rem;
+}
+
+
+/* Пустая таблица */
+.table-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray);
+  font-size: 1.1rem;
+}
+
+.table-empty::before {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.row-count {
+  color: var(--gray);
+}
+
+/* Скроллбар для таблицы */
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--gray-light);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
 }
 </style>
