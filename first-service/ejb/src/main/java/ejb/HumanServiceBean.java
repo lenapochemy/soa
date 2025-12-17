@@ -11,14 +11,14 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 
 import jakarta.ejb.Stateless;
-//import org.jboss.ejb3.annotation.Pool;
+import org.jboss.ejb3.annotation.Pool;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Stateless
-//@Pool("my-pool")
+@Pool("my-pool")
 public class HumanServiceBean implements HumanService {
 
     @PersistenceContext(unitName = "HumanPU")
