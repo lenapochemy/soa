@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+zuul:
+  routes:
+    team-service:
+      path: team-service/**
+      serviceId: TEAM-SERVICE  # Имя из Eureka
+      strip-prefix: true
+  ignored-services: '*'
+
+ribbon:
+  eureka:
+    enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
