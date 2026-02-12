@@ -101,7 +101,7 @@ const update = async () => {
     }
   } catch (err) {
     console.error('Ошибка отправки:', err);
-    updateError.value = err.response.data.message
+    updateError.value = err.response.data
   }
 }
 

@@ -32,7 +32,7 @@ const giveCars = async () => {
       const response = await axios.post(baseTeamsUrl + teamId.value + "/car/add");
       emit('addedCars')
     } catch (err) {
-      giveCarsError.value = err.response.data.message
+      giveCarsError.value = err.response.data
     }
   }
 }

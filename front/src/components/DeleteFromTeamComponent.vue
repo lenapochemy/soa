@@ -18,7 +18,7 @@ const deleteHumanFromTeam = async (teamId, humanId) => {
     const response = await axios.delete(baseTeamsUrl + teamId + "/remove/" + humanId)
     emit('deletedFromTeam')
   } catch (err) {
-    deleteError.value = err.response.data.message
+    deleteError.value = err.response.data
   }
 }
 

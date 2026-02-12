@@ -14,7 +14,7 @@ const deleteHuman = async (id) => {
     const response = await axios.delete(baseHumansUrl + "/" + id)
     emit('deleted')
   } catch (err) {
-    deleteError.value = err.response.data.message
+    deleteError.value = err.response.data
   }
 }
 

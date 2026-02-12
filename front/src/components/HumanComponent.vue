@@ -29,7 +29,7 @@ const getHuman = async () => {
     console.log(err)
     humans.value = undefined
     emit('human', humans.value)
-    errorGetHuman.value = err.response.data.message
+    errorGetHuman.value = err.response.data
   }
 }
 

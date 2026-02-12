@@ -17,7 +17,7 @@ public class ClientService {
     private final RestTemplate restTemplate;
 
 
-    private final String baseHumansUrl = "http://localhost:8080/human-service/api/humans";
+    private final String baseHumansUrl = "http://localhost:8091/human-service/api/humans";
 
     public ClientService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

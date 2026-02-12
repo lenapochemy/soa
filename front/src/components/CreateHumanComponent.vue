@@ -152,7 +152,7 @@ const submitHuman = async () => {
     }
   } catch (err) {
     console.error('Ошибка отправки:', err);
-    createError.value = err.response.data.message
+    createError.value = err.response.data
   }
 }
 

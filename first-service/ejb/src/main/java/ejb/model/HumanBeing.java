@@ -5,7 +5,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class HumanBeing implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +33,8 @@ public class HumanBeing implements Serializable {
     @OneToOne
     private Coordinates coordinates;
     @NotNull
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlSchemaType(name = "date")
     private LocalDate creationDate;
     private Boolean realHero;
     @Min(value = 1)
@@ -44,7 +48,7 @@ public class HumanBeing implements Serializable {
     @NotNull
     @Enumerated
     private Mood mood;
-    @OneToOne (optional = true)
+    @OneToOne(optional = true)
     private Car car;
 
 }

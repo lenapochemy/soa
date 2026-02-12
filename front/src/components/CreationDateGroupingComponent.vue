@@ -13,7 +13,7 @@ const getGrouping = async () => {
     errorCreationDate.value = undefined
   } catch (err) {
     creationDate.value = undefined
-    errorCreationDate.value = err.response.data.message
+    errorCreationDate.value = err.response.data
   }
 }
 

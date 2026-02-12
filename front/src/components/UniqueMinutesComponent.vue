@@ -15,7 +15,7 @@ const getUniqueMinutes = async () => {
     errorUnique.value = undefined
   } catch (err) {
     unique.value = undefined
-    errorUnique.value = err.response.data.message
+    errorUnique.value = err.response.data
   }
 }
 

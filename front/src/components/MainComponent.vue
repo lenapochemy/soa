@@ -40,7 +40,7 @@ const getHumans = async () => {
     errorGet.value = undefined
   } catch (err) {
     humans.value = undefined
-    errorGet.value = err.response.data.message
+    errorGet.value = err.response.data
   }
 }
 
@@ -345,13 +345,34 @@ onMounted(
 }
 
 /* === Table Styling === */
+
+/* Контейнер для таблицы — делаем его видимым целиком */
+.table-container {
+  margin-top: 1rem;
+  max-width: 100%;
+  overflow-x: auto;       /* горизонтальный скролл только внутри контейнера */
+  overflow-y: auto;       /* если строк много, скроллим внутри контейнера */
+  max-height: calc(100vh - 260px); /* высота окна минус панель с кнопками/верх */
+  box-sizing: border-box;
+}
+
+/* Чтобы таблица не «разъезжалась» */
 table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;              /* убираем большой внешний отступ */
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  /*table-layout: fixed;     опционально, чтобы колонки не раздувались */
+}
+
+/*table {
   width: 100%;
   border-collapse: collapse;
   margin: 2rem 0;
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
-}
+}*/
 
 thead {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -367,7 +388,7 @@ thead th {
   letter-spacing: 0.5px;
 }
 
-thead th:hover {
+thead th:hover { 
   background-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }

@@ -30,8 +30,9 @@ const getHumansWithGreaterMinutes = async () => {
     humans.value = response.data;
     errorGreaterMinutes.value = undefined
   } catch (err) {
+    console.log(err)
     humans.value = undefined
-    errorGreaterMinutes.value = err.response.data.message
+    errorGreaterMinutes.value = err.response.data
   }
 }
 
